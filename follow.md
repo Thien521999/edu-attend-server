@@ -60,3 +60,22 @@
 1.  **Server - Stateless Auth**: Server không giữ session. Mọi quyền hạn (`owner_id`, `permissions`) đều nằm trong Token.
 2.  **Server - Owner Filter**: Mọi cô giáo khi thao tác dữ liệu, Server sẽ luôn lấy `owner_id` từ Token để lọc: `db.classes.find({ owner_id: token.owner_id })`.
 3.  **Client - Interceptor**: Sử dụng Axios Interceptor để tự động xử lý lỗi 401 và refresh token mà người dùng không hề hay biết (Silent Refresh).
+
+## IV. Giải thích luồng auth dễ scale sau này
+
+- A. Linh hoạt khi mở rộng (Scalability)
+  - Sau này trung tâm phát triển, bạn muốn thêm role MARKETING (chỉ được xem danh sách học sinh để gọi điện) hoặc ACCOUNTANT (chỉ được quản lý học phí).
+  - Nếu dùng bảng riêng: Bạn chỉ cần chèn 1 dòng vào Roles và gán Permissions tương ứng. Không cần sửa code.
+  - Nếu gộp vào User: Bạn sẽ phải sửa code check logic ở rất nhiều nơi.
+
+- B. Quản lý Phạm vi (Scope/Owner ID)
+  - Theo follow.md, giáo viên chỉ được quản lý học sinh của chính họ (owner_id).
+
+  - Bảng UserRoles đóng vai trò là "cầu nối". Nó không chỉ nói "User A là Giáo viên", mà còn nói "User A là Giáo viên tại phạm vi (Scope) lớp TOAN10".
+
+  - Khi Login, Server sẽ lấy thông tin này nhét vào Payload của Access Token. Từ đó, mọi API phía sau sẽ tự động biết để lọc dữ liệu theo đúng "chủ sở hữu".
+
+- C. Phân quyền chi tiết (Granular Permissions)
+  - Nhiều Role khác nhau có thể cùng có một Permission (ví dụ: cả SUPER_ADMIN và TEACHER đều xem được thông báo).
+
+  - Việc tách bảng Permissions giúp bạn quản lý các "hành động" độc lập với "chức danh".
