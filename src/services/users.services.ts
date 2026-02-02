@@ -9,7 +9,7 @@ import { signToken, verifyToken } from '~/utils/jwt'
 import RefreshToken from '~/models/schemas/RefreshToken.schema'
 import { RoleCode, RoleScopeType, PermissionCode } from '~/constants/enums'
 import { SignOptions } from 'jsonwebtoken'
-import { sendVerifyRegisterEmail } from '~/utils/email'
+import { sendForgotPasswordEmail, sendVerifyRegisterEmail } from '~/utils/email'
 import { InvitationStatus } from '~/constants/enums'
 import Invitation from '~/models/schemas/Invitation.schema'
 import { AcceptInvitationReqBody } from '~/models/requests/Invitation.requests'
@@ -373,6 +373,75 @@ class UsersService {
       access_token: new_access_token,
       refresh_token: new_refresh_token
     }
+  }
+
+  async forgotPassword({ user_id, status, email }: { user_id: string; status: userVerifyStatus; email: string }) {
+    const forgot_password_token = await this.signForgotPasswordToken({ user_id, status })
+    await databaseService.users.updateOne(
+      {
+        _id: new ObjectId(user_id)
+      },
+      [
+        {
+          $set: {
+            forgot_password_token,
+            updated_at: '$$NOW'
+          }
+        }
+      ]
+    )
+
+    // gửi email
+    await sendForgotPasswordEmail(email, forgot_password_token)
+
+    return {
+      message: USERS_MESSAGES.CHECK_EMAIL_TO_RESET_PASSWORD
+    }
+  }
+  async resetPassword(user_id: string, password: string) {
+    await databaseService.users.updateOne(
+      { _id: new ObjectId(user_id) },
+      {
+        $set: {
+          forgot_password_token: '',
+          password: hashPassword(password)
+        },
+        $currentDate: {
+          updated_at: true
+        }
+      }
+    )
+    return {
+      message: USERS_MESSAGES.RESET_PASSWORD_SUCCESS
+    }
+  }
+
+  async getMe(user_id: string) {
+    const user = await databaseService.users.findOne(
+      { _id: new ObjectId(user_id) },
+      {
+        projection: {
+          password: 0,
+          forgot_password_token: 0
+        }
+      }
+    )
+    return user
+  }
+
+  async getMeById(_id: string) {
+    const user = await databaseService.users.findOne(
+      {
+        _id: new ObjectId(_id)
+      },
+      {
+        projection: {
+          password: 0,
+          forgot_password_token: 0
+        }
+      }
+    )
+    return user
   }
 
   async updateMe(user_id: string, payload: UpdatedMeReqBody) {

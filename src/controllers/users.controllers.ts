@@ -76,42 +76,42 @@ export const verifyEmailController = async (
   })
 }
 
-// export const forgotPasswordController = async (
-//   req: Request<ParamsDictionary, any, ForgotPasswordReqBody>,
-//   res: Response,
-//   next: NextFunction
-// ) => {
-//   const { _id, verify, email } = req.user as User
-//   const result = await usersService.forgotPassword({
-//     user_id: (_id as ObjectId).toString(),
-//     verify,
-//     email
-//   })
+export const forgotPasswordController = async (
+  req: Request<ParamsDictionary, any, ForgotPasswordReqBody>,
+  res: Response,
+  next: NextFunction
+) => {
+  const { _id, status, email } = req.user as User
+  const result = await usersService.forgotPassword({
+    user_id: (_id as ObjectId).toString(),
+    status,
+    email
+  })
 
-//   res.json(result)
-// }
+  res.json(result)
+}
 
-// export const verifyForgotPasswordController = async (
-//   req: Request<ParamsDictionary, any, any>,
-//   res: Response,
-//   next: NextFunction
-// ) => {
-//   res.json({
-//     message: USERS_MESSAGES.VERIFY_FORFOT_PASSWORD_SUCCESS
-//   })
-// }
+export const verifyForgotPasswordController = async (
+  req: Request<ParamsDictionary, any, any>,
+  res: Response,
+  next: NextFunction
+) => {
+  res.json({
+    message: USERS_MESSAGES.VERIFY_FORFOT_PASSWORD_SUCCESS
+  })
+}
 
-// export const resetPasswordController = async (
-//   req: Request<ParamsDictionary, any, ResetPasswordReqBody>,
-//   res: Response,
-//   next: NextFunction
-// ) => {
-//   const { user_id } = req.decoded_forgot_password_token as TokenPayload
-//   const { password } = req.body
-//   const result = await usersService.resetPassword(user_id, password)
+export const resetPasswordController = async (
+  req: Request<ParamsDictionary, any, ResetPasswordReqBody>,
+  res: Response,
+  next: NextFunction
+) => {
+  const { user_id } = req.decoded_forgot_password_token as TokenPayload
+  const { password } = req.body
+  const result = await usersService.resetPassword(user_id, password)
 
-//   res.json(result)
-// }
+  res.json(result)
+}
 
 export const refreshTokenController = async (
   req: Request<ParamsDictionary, any, RefreshTokenReqbody>,
@@ -127,25 +127,25 @@ export const refreshTokenController = async (
   })
 }
 
-// export const getMeController = async (req: Request, res: Response, next: NextFunction) => {
-//   const { user_id } = req.decoded_authorization as TokenPayload
-//   const user = await usersService.getMe(user_id)
+export const getMeController = async (req: Request, res: Response, next: NextFunction) => {
+  const { user_id } = req.decoded_authorization as TokenPayload
+  const user = await usersService.getMe(user_id)
 
-//   res.json({
-//     message: USERS_MESSAGES.GET_My_PROFILE_SUCCESS,
-//     result: user
-//   })
-// }
+  res.json({
+    message: USERS_MESSAGES.GET_My_PROFILE_SUCCESS,
+    result: user
+  })
+}
 
-// export const getMeByIdController = async (req: Request, res: Response, next: NextFunction) => {
-//   const { _id } = req.params
-//   const user = await usersService.getMeById(_id)
+export const getMeByIdController = async (req: Request, res: Response, next: NextFunction) => {
+  const { _id } = req.params as { _id: string }
+  const user = await usersService.getMeById(_id)
 
-//   res.json({
-//     message: USERS_MESSAGES.GET_My_PROFILE_SUCCESS,
-//     result: user
-//   })
-// }
+  res.json({
+    message: USERS_MESSAGES.GET_My_PROFILE_SUCCESS,
+    result: user
+  })
+}
 
 export const updateMeController = async (req: Request, res: Response, next: NextFunction) => {
   const { user_id } = req.decoded_authorization as TokenPayload

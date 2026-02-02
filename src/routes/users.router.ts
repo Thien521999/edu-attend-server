@@ -3,14 +3,24 @@ import {
   registerController,
   loginController,
   verifyEmailController,
-  refreshTokenController
+  refreshTokenController,
+  forgotPasswordController,
+  verifyForgotPasswordController,
+  resetPasswordController,
+  getMeController,
+  getMeByIdController
 } from '~/controllers/users.controllers'
 import { fiterMiddeware } from '~/middlewares/common.middewares'
 import {
   registerValidator,
   loginValidator,
   emailVerifyTokenValidator,
-  refreshTokenValidator
+  refreshTokenValidator,
+  forgotPasswordValidator,
+  verifyForgotPasswordTokenValidator,
+  resetPasswordValidator,
+  accessTokenValidator,
+  userIdValidator
 } from '~/middlewares/users.middlewares'
 import { wrapRequestHandler } from '~/utils/handler'
 
@@ -47,7 +57,7 @@ usersRouter.post('/verify-email', emailVerifyTokenValidator, wrapRequestHandler(
  * Header: { email: string }
  * Body: {}
  */
-// usersRouter.post('/forgot-password', forgotPasswordValidator, wrapRequestHandler(forgotPasswordController))
+usersRouter.post('/forgot-password', forgotPasswordValidator, wrapRequestHandler(forgotPasswordController))
 
 /*
  * Desciption. Verify link in email to reset password
@@ -56,11 +66,11 @@ usersRouter.post('/verify-email', emailVerifyTokenValidator, wrapRequestHandler(
  * Header: { forgot_password_token: string }
  * Body: {}
  */
-// usersRouter.post(
-//     '/verify-forgot-password',
-//     verifyForgotPasswordTokenValidator,
-//     wrapRequestHandler(verifyForgotPasswordController)
-// )
+usersRouter.post(
+  '/verify-forgot-password',
+  verifyForgotPasswordTokenValidator,
+  wrapRequestHandler(verifyForgotPasswordController)
+)
 
 /*
  * Desciption. reset password
@@ -69,7 +79,7 @@ usersRouter.post('/verify-email', emailVerifyTokenValidator, wrapRequestHandler(
  * Header: { forgot_password_token: string, password: string, confirm_password: string }
  * Body: {}
  */
-// usersRouter.post('/reset-password', resetPasswordValidator, wrapRequestHandler(resetPasswordController))
+usersRouter.post('/reset-password', resetPasswordValidator, wrapRequestHandler(resetPasswordController))
 
 /*
  * Desciption. Refresh Token
@@ -85,15 +95,15 @@ usersRouter.post('/refresh-token', refreshTokenValidator, wrapRequestHandler(ref
  * Method: GET
  * Header: { Authorization: Bearer <access_token> }
  */
-// usersRouter.get('/me', accessTokenValidator, wrapRequestHandler(getMeController))
+usersRouter.get('/me', accessTokenValidator, wrapRequestHandler(getMeController))
 
 /*
  * Desciption. Get my profile by id
- * Path: /me/edadessd
+ * Path: /me/:_id
  * Method: GET
- * Header:
+ * Header: { Authorization: Bearer <access_token> }
  */
-// usersRouter.get('/me/:_id', wrapRequestHandler(getMeByIdController))
+usersRouter.get('/me/:_id', accessTokenValidator, wrapRequestHandler(getMeByIdController))
 
 /*
  * Desciption. Update my profile

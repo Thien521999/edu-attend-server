@@ -38,7 +38,6 @@ export default class User {
     this.status = user.status || userVerifyStatus.Unverified
     this.forgot_password_token = user.forgot_password_token || ''
 
-
     this.avatar = user.avatar || ''
     this.cover_photo = user.cover_photo || ''
 
