@@ -1,5 +1,10 @@
 import { Router } from 'express'
-import { registerController, loginController, verifyEmailController } from '~/controllers/users.controllers'
+import {
+  registerController,
+  loginController,
+  verifyEmailController,
+  refreshTokenController
+} from '~/controllers/users.controllers'
 import { fiterMiddeware } from '~/middlewares/common.middewares'
 import {
   registerValidator,
@@ -72,7 +77,7 @@ usersRouter.post('/verify-email', emailVerifyTokenValidator, wrapRequestHandler(
  * Method: POST
  * Header: { refresh_token: string }
  */
-// usersRouter.post('/refresh-token', refreshTokenValidator, wrapRequestHandler(refreshTokenController))
+usersRouter.post('/refresh-token', refreshTokenValidator, wrapRequestHandler(refreshTokenController))
 
 /*
  * Desciption. Get my profile

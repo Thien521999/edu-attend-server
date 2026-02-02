@@ -113,19 +113,19 @@ export const verifyEmailController = async (
 //   res.json(result)
 // }
 
-// export const refreshTokenController = async (
-//   req: Request<ParamsDictionary, any, RefreshTokenReqbody>,
-//   res: Response
-// ) => {
-//   const { refresh_token } = req.body
-//   const { user_id, verify, exp } = req.decoded_refresh_token as TokenPayload
-//   const result = await usersService.refreshToken({ user_id, refresh_token, verify, exp })
+export const refreshTokenController = async (
+  req: Request<ParamsDictionary, any, RefreshTokenReqbody>,
+  res: Response
+) => {
+  const { refresh_token } = req.body
+  const { user_id, status, exp } = req.decoded_refresh_token as TokenPayload
+  const result = await usersService.refreshToken({ user_id, refresh_token, status, exp })
 
-//   res.json({
-//     message: USERS_MESSAGES.REFRESH_TOKEN_SUCCESS,
-//     result
-//   })
-// }
+  res.json({
+    message: USERS_MESSAGES.REFRESH_TOKEN_SUCCESS,
+    result
+  })
+}
 
 // export const getMeController = async (req: Request, res: Response, next: NextFunction) => {
 //   const { user_id } = req.decoded_authorization as TokenPayload
@@ -214,10 +214,10 @@ export const updateMeController = async (req: Request, res: Response, next: Next
 export const getUsersController = async (req: Request, res: Response) => {
   const limit = Number(req.query.limit as string)
   const page = Number(req.query.page as string)
-  const verify = Number(req.query.verify as string)
+  const status = Number(req.query.verify as string)
 
-  const { users, total_page } = await await usersService.getUsers({
-    verify,
+  const { users, total_page } = await usersService.getUsers({
+    status,
     limit,
     page
   })

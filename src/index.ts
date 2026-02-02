@@ -27,7 +27,7 @@ dotenv.config()
 // initFolder()
 
 databaseService.connect().then(async () => {
-  await databaseService.indexUsers()
+  await Promise.all([databaseService.indexUsers(), databaseService.indexRefreshTokens()])
   // await databaseService.indexRBAC()
   await seedDatabase()
 })

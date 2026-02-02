@@ -38,6 +38,13 @@ class DatabaseService {
     ])
   }
 
+  async indexRefreshTokens() {
+    await Promise.all([
+      this.refreshToken.createIndex({ token: 1 }),
+      this.refreshToken.createIndex({ exp: 1 }, { expireAfterSeconds: 0 })
+    ])
+  }
+
   // async indexRBAC() {
   //   await Promise.all([
   //     this.roles.createIndex({ code: 1 }, { unique: true }),

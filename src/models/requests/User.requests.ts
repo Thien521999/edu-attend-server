@@ -4,7 +4,7 @@ import { TokenType, userVerifyStatus } from '~/constants/enums'
 export interface TokenPayload extends JwtPayload {
   user_id: string
   token_type: TokenType
-  verify: userVerifyStatus
+  status: userVerifyStatus
   role?: string // RoleCode
   permissions?: string[] // PermissionCode[]
   owner_id?: string // For teachers/students to know their primary owner

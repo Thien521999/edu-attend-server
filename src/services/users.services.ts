@@ -33,7 +33,7 @@ class UsersService {
       payload: {
         user_id,
         token_type: TokenType.AccessToken,
-        verify: status,
+        status,
         role,
         permissions,
         owner_id
@@ -65,7 +65,7 @@ class UsersService {
         payload: {
           user_id,
           token_type: TokenType.RefreshToken,
-          verify: status,
+          status,
           role,
           permissions,
           owner_id,
@@ -78,7 +78,7 @@ class UsersService {
       payload: {
         user_id,
         token_type: TokenType.RefreshToken,
-        verify: status,
+        status,
         role,
         permissions,
         owner_id
@@ -95,7 +95,7 @@ class UsersService {
       payload: {
         user_id,
         token_type: TokenType.EmailVerifyToken,
-        verify: status
+        status
       },
       privateKey: process.env.JWT_SECRET_EMAIL_VERIFY_TOKEN as string,
       options: {
@@ -109,7 +109,7 @@ class UsersService {
       payload: {
         user_id,
         token_type: TokenType.ForgotPasswordToken,
-        verify: status
+        status
       },
       privateKey: process.env.JWT_SECRET_FORGOT_PASSWORD_TOKEN as string,
       options: {
@@ -342,6 +342,39 @@ class UsersService {
     }
   }
 
+  async refreshToken({
+    user_id,
+    refresh_token,
+    status,
+    exp
+  }: {
+    user_id: string
+    refresh_token: string
+    status: userVerifyStatus
+    exp: number
+  }) {
+    const { role_code, permissions, owner_id } = await this.getRoleAndPermissions(user_id)
+    const [new_access_token, new_refresh_token] = await Promise.all([
+      this.signAccessToken({ user_id, status, role: role_code, permissions, owner_id }),
+      this.signRefreshsToken({ user_id, status, role: role_code, permissions, owner_id, exp }),
+      databaseService.refreshToken.deleteOne({ token: refresh_token })
+    ])
+    const decoded_refresh_token = await this.decodeRefreshToken(new_refresh_token)
+    await databaseService.refreshToken.insertOne(
+      new RefreshToken({
+        user_id: new ObjectId(user_id),
+        token: new_refresh_token,
+        iat: decoded_refresh_token.iat,
+        exp: decoded_refresh_token.exp
+      })
+    )
+
+    return {
+      access_token: new_access_token,
+      refresh_token: new_refresh_token
+    }
+  }
+
   async updateMe(user_id: string, payload: UpdatedMeReqBody) {
     const _payload = payload.date_of_birth
       ? { ...payload, date_of_birth: new Date(payload.date_of_birth) }
@@ -370,12 +403,12 @@ class UsersService {
     return user
   }
 
-  async getUsers({ verify, limit, page }: { verify: number; limit: number; page: number }) {
+  async getUsers({ status, limit, page }: { status: number; limit: number; page: number }) {
     const users = await databaseService.users
       .aggregate([
         {
           $match: {
-            verify
+            status
           }
         },
         {
