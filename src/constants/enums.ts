@@ -12,30 +12,6 @@ export enum TokenType {
   InvitationToken
 }
 
-export enum MediaType {
-  Image, // 0
-  Video // 1
-}
-
-export enum TweetType {
-  Tweet, // 0
-  Retweet, // 1
-  Comment, //2
-  QuoteTweet //3
-}
-
-export enum BlogAudience {
-  EveryOne,
-  BlogCircle
-}
-
-export enum BlogTopic {
-  FoodDrink,
-  Adventure,
-  BudgetTravel,
-  LuxuryTravel
-}
-
 export enum RoleCode {
   SUPER_ADMIN = 'SUPER_ADMIN',
   TEACHER = 'TEACHER',
@@ -71,4 +47,22 @@ export enum InvitationStatus {
   PENDING = 'PENDING',
   ACCEPTED = 'ACCEPTED',
   EXPIRED = 'EXPIRED'
+}
+
+export type StudentStatus = 'STUDYING' | 'LEFT'
+
+export type Relationship = 'FATHER' | 'MOTHER' | 'GUARDIAN'
+
+export type AttendanceStatus = 'PRESENT' | 'ABSENT' | 'LATE' | 'EXCUSED'
+
+export type TuitionFeeStatus = 'PAID' | 'UNPAID' | 'PARTIAL' | 'OVERDUE' | 'CANCELLED'
+
+export enum ActionType {
+  CREATE = 'CREATE',
+  UPDATE = 'UPDATE',
+  DELETE = 'DELETE',
+  LOGIN = 'LOGIN',
+  LOGOUT = 'LOGOUT',
+  MARK_ATTENDANCE = 'MARK_ATTENDANCE',
+  PAY_TUITION = 'PAY_TUITION'
 }

@@ -79,3 +79,62 @@
   - Nhiều Role khác nhau có thể cùng có một Permission (ví dụ: cả SUPER_ADMIN và TEACHER đều xem được thông báo).
 
   - Việc tách bảng Permissions giúp bạn quản lý các "hành động" độc lập với "chức danh".
+
+---
+
+# IV. Review Schema & Brainstorming Ý tưởng (Mới cập nhật)
+
+## 1. Review các bảng hiện tại (Phân tích chi tiết)
+
+### ✅ Ưu điểm:
+
+- Cấu trúc RBAC (`Roles`, `Permissions`, `UserRoles`) rất linh hoạt, hỗ trợ tốt cho việc phân quyền theo phạm vi (Scope).
+- Các bảng được tách biệt rõ ràng theo từng thực thể học thuật (`Class`, `Student`, `Teacher`, `Subject`).
+
+### ⚠️ Các điểm cần lưu ý/Sửa đổi:
+
+- **Lỗi chính tả:** File `StudentParant.schema.ts` đang bị sai chính tả (nên là `StudentParent`).
+- **Sự nhất quán (Consistency):**
+  - Một số bảng dùng `owner_id` (trỏ đến `User`), một số dùng `teacher_id` (trỏ đến `Teacher`). Nên thống nhất để dễ code logic check quyền.
+  - `TuitionFee` có `student_id` nhưng comment lại ghi là `Link đến users collection`. Nên thống nhất trỏ về collection `students`.
+- **Dữ liệu thừa (Redundant):**
+  - `enums.ts` còn sót lại các enum từ template cũ (`TweetType`, `BlogTopic`, v.v.). Nên dọn dẹp để code clean hơn.
+- **Liên kết thiếu:**
+  - Bảng `School` hiện đang đứng độc lập. Cần liên kết `Teacher` hoặc `Class` với `School` để quản lý đa trường (nếu sau này scale lên).
+
+## 2. Các trường thông tin còn thiếu (Gợi ý bổ sung)
+
+- **Student:** Bổ sung `date_of_birth`, `address`, `gender`, `phone` (nếu có).
+- **TuitionFee:** Hiện đang thiếu `amount` (số tiền), `payment_date` (ngày nộp), `payment_method` (chuyển khoản/tiền mặt), và `description`. Ngoài ra, nên chia theo tháng/học kỳ thay vì chỉ theo năm học.
+- **AttendanceRecord:** Bổ sung trường `note` (lý do vắng/đi muộn).
+- **Timetable:** Bổ sung `room_name` (tên phòng học).
+
+## 3. Brainstorming Ý tưởng tính năng tiếp theo (Lên ý tưởng Dev)
+
+### 📊 A. Quản lý Học tập (Academic Management)
+
+- **Exam & Score (Bài kiểm tra & Điểm số):** Cần bảng `Exams` (tên bài test, ngày test, hệ số điểm) và `Scores` (điểm của từng học sinh). Đây là lõi của mọi trung tâm.
+- **Learning Materials (Tài liệu):** Cho phép giáo viên upload file (PDF, hình ảnh) cho từng môn học hoặc từng lớp.
+- **Homework (Bài tập về nhà):** Giáo viên giao bài, học sinh có thể nộp bài (submission) trực tuyến.
+
+### 🔔 B. Tương tác & Thông báo (Communication)
+
+- **Notifications:** Hệ thống thông báo tự động cho phụ huynh khi:
+  - Học sinh vắng mặt không phép.
+  - Có thông báo đóng học phí.
+  - Có điểm bài kiểm tra mới.
+- **Announcement (Thông báo chung):** Super Admin gửi bảng tin cho toàn bộ giáo viên/học sinh.
+
+### 💰 C. Quản lý Tài chính nâng cao (Finance)
+
+- **Fee Configuration (Cấu hình học phí):** Quy định mức học phí cho từng khối/môn (VD: Toán 10 là 500k/tháng).
+- **Salary (Lương giáo viên):** Tính lương dựa trên số tiết dạy (từ `AttendanceSession`) hoặc lương cứng.
+
+### 📈 D. Báo cáo & Thống kê (Reports)
+
+- **Dashboard cho Giáo viên:** Xem tỉ lệ chuyên cần trung bình, thống kê học phí đã thu/chưa thu.
+- **Học bạ điện tử:** Tổng hợp điểm số và nhận xét của giáo viên theo từng tháng/kỳ.
+
+---
+
+_Ghi chú: Các ý tưởng trên có thể triển khai dần theo từng giai đoạn (Sprint)._
