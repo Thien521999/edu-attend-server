@@ -5,6 +5,8 @@ interface SubjectType {
   name: string
   code: string
   description?: string
+  credits?: number
+  is_active?: boolean
 
   created_at?: Date
   updated_at?: Date
@@ -16,6 +18,8 @@ export default class Subject {
   name: string // Tên môn học (VD: "Toán")
   code: string // Mã môn học (VD: "MATH")
   description?: string // Mô tả môn học
+  credits: number
+  is_active: boolean
 
   created_at?: Date
   updated_at?: Date
@@ -26,6 +30,8 @@ export default class Subject {
     this.name = subject.name
     this.code = subject.code
     this.description = subject.description || ''
+    this.credits = subject.credits || 0
+    this.is_active = subject.is_active !== undefined ? subject.is_active : true
 
     this.created_at = subject.created_at || date
     this.updated_at = subject.updated_at || date

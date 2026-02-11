@@ -149,3 +149,144 @@ export const NOTIFICATIONS_MESSAGES = {
   MARKED_NOTIFICATIONS_AS_READ: 'Marked notification as read',
   GET_UNREAD_NOTIFICATIONS_SUCCESSFULLY: 'Get unread notifications successfully'
 }
+
+export const CLASSES_MESSAGES = {
+  CREATE_CLASS_SUCCESS: 'Create class success',
+  GET_CLASSES_SUCCESS: 'Get classes success',
+  GET_CLASS_DETAIL_SUCCESS: 'Get class detail success',
+  UPDATE_CLASS_SUCCESS: 'Update class success',
+  DELETE_CLASS_SUCCESS: 'Delete class success',
+  CLASS_NOT_FOUND: 'Class not found'
+} as const
+
+export const GRADE_MESSAGES = {
+  CREATE_GRADE_SUCCESS: 'Create grade success',
+  GET_GRADES_SUCCESS: 'Get grades success',
+  GET_GRADE_DETAIL_SUCCESS: 'Get grade detail success',
+  UPDATE_GRADE_SUCCESS: 'Update grade success',
+  DELETE_GRADE_SUCCESS: 'Delete grade success',
+  GRADE_NOT_FOUND: 'Grade not found'
+} as const
+
+export const SCHOOL_MESSAGES = {
+  CREATE_SCHOOL_SUCCESS: 'Create school success',
+  GET_SCHOOLS_SUCCESS: 'Get schools success',
+  GET_SCHOOL_DETAIL_SUCCESS: 'Get school detail success',
+  UPDATE_SCHOOL_SUCCESS: 'Update school success',
+  DELETE_SCHOOL_SUCCESS: 'Delete school success',
+  SCHOOL_NOT_FOUND: 'School not found'
+} as const
+
+export const ACADEMIC_YEAR_MESSAGES = {
+  CREATE_ACADEMIC_YEAR_SUCCESS: 'Create academic year success',
+  GET_ACADEMIC_YEARS_SUCCESS: 'Get academic years success',
+  GET_ACADEMIC_YEAR_DETAIL_SUCCESS: 'Get academic year detail success',
+  UPDATE_ACADEMIC_YEAR_SUCCESS: 'Update academic year success',
+  DELETE_ACADEMIC_YEAR_SUCCESS: 'Delete academic year success',
+  ACADEMIC_YEAR_NOT_FOUND: 'Academic year not found'
+} as const
+
+export const STUDENT_MESSAGES = {
+  CREATE_STUDENT_SUCCESS: 'Create student success',
+  GET_STUDENTS_SUCCESS: 'Get students success',
+  GET_STUDENT_DETAIL_SUCCESS: 'Get student detail success',
+  UPDATE_STUDENT_SUCCESS: 'Update student success',
+  DELETE_STUDENT_SUCCESS: 'Delete student success',
+  STUDENT_NOT_FOUND: 'Student not found',
+  STUDENT_CODE_EXISTED: 'Student code existed'
+} as const
+
+export const PARENT_MESSAGES = {
+  CREATE_PARENT_SUCCESS: 'Create parent success',
+  GET_PARENTS_SUCCESS: 'Get parents success',
+  GET_PARENT_DETAIL_SUCCESS: 'Get parent detail success',
+  UPDATE_PARENT_SUCCESS: 'Update parent success',
+  DELETE_PARENT_SUCCESS: 'Delete parent success',
+  PARENT_NOT_FOUND: 'Parent not found'
+} as const
+
+export const TEACHER_MESSAGES = {
+  CREATE_TEACHER_SUCCESS: 'Create teacher success',
+  GET_TEACHERS_SUCCESS: 'Get teachers success',
+  GET_TEACHER_DETAIL_SUCCESS: 'Get teacher detail success',
+  UPDATE_TEACHER_SUCCESS: 'Update teacher success',
+  DELETE_TEACHER_SUCCESS: 'Delete teacher success',
+  TEACHER_NOT_FOUND: 'Teacher not found'
+} as const
+
+export const SUBJECT_MESSAGES = {
+  CREATE_SUBJECT_SUCCESS: 'Create subject success',
+  GET_SUBJECTS_SUCCESS: 'Get subjects success',
+  GET_SUBJECT_DETAIL_SUCCESS: 'Get subject detail success',
+  UPDATE_SUBJECT_SUCCESS: 'Update subject success',
+  DELETE_SUBJECT_SUCCESS: 'Delete subject success',
+  SUBJECT_NOT_FOUND: 'Subject not found',
+  SUBJECT_CODE_EXISTED: 'Subject code existed'
+} as const
+
+export const TIMETABLE_MESSAGES = {
+  CREATE_TIMETABLE_SUCCESS: 'Create timetable success',
+  GET_TIMETABLES_SUCCESS: 'Get timetables success',
+  GET_TIMETABLE_DETAIL_SUCCESS: 'Get timetable detail success',
+  UPDATE_TIMETABLE_SUCCESS: 'Update timetable success',
+  DELETE_TIMETABLE_SUCCESS: 'Delete timetable success',
+  TIMETABLE_NOT_FOUND: 'Timetable not found'
+} as const
+
+export const ATTENDANCE_MESSAGES = {
+  CREATE_SESSION_SUCCESS: 'Create attendance session success',
+  GET_SESSIONS_SUCCESS: 'Get attendance sessions success',
+  GET_SESSION_DETAIL_SUCCESS: 'Get attendance session detail success',
+  UPDATE_SESSION_SUCCESS: 'Update attendance session success',
+  DELETE_SESSION_SUCCESS: 'Delete attendance session success',
+  SESSION_NOT_FOUND: 'Attendance session not found',
+  MARK_ATTENDANCE_SUCCESS: 'Mark attendance success',
+  GET_RECORDS_SUCCESS: 'Get attendance records success'
+} as const
+
+export const FINANCIAL_MESSAGES = {
+  CREATE_FEE_STRUCTURE_SUCCESS: 'Create fee structure success',
+  GET_FEE_STRUCTURES_SUCCESS: 'Get fee structures success',
+  GET_FEE_STRUCTURE_DETAIL_SUCCESS: 'Get fee structure detail success',
+  UPDATE_FEE_STRUCTURE_SUCCESS: 'Update fee structure success',
+  DELETE_FEE_STRUCTURE_SUCCESS: 'Delete fee structure success',
+  FEE_STRUCTURE_NOT_FOUND: 'Fee structure not found',
+
+  CREATE_INVOICE_SUCCESS: 'Create invoice success',
+  GET_INVOICES_SUCCESS: 'Get invoices success',
+  GET_INVOICE_DETAIL_SUCCESS: 'Get invoice detail success',
+  UPDATE_INVOICE_SUCCESS: 'Update invoice success',
+  DELETE_INVOICE_SUCCESS: 'Delete invoice success',
+  INVOICE_NOT_FOUND: 'Invoice not found'
+} as const
+
+export const AUDIT_MESSAGES = {
+  GET_LOGS_SUCCESS: 'Get audit logs success'
+} as const
+
+export const TEACHING_ASSIGNMENT_MESSAGES = {
+  CREATE_ASSIGNMENT_SUCCESS: 'Create teaching assignment success',
+  GET_ASSIGNMENTS_SUCCESS: 'Get teaching assignments success',
+  GET_ASSIGNMENT_DETAIL_SUCCESS: 'Get teaching assignment detail success',
+  UPDATE_ASSIGNMENT_SUCCESS: 'Update teaching assignment success',
+  DELETE_ASSIGNMENT_SUCCESS: 'Delete teaching assignment success',
+  ASSIGNMENT_NOT_FOUND: 'Teaching assignment not found'
+} as const
+
+export const ROLE_MESSAGES = {
+  CREATE_ROLE_SUCCESS: 'Create role success',
+  GET_ROLES_SUCCESS: 'Get roles success',
+  GET_ROLE_DETAIL_SUCCESS: 'Get role detail success',
+  UPDATE_ROLE_SUCCESS: 'Update role success',
+  DELETE_ROLE_SUCCESS: 'Delete role success',
+  ROLE_NOT_FOUND: 'Role not found'
+} as const
+
+export const PERMISSION_MESSAGES = {
+  CREATE_PERMISSION_SUCCESS: 'Create permission success',
+  GET_PERMISSIONS_SUCCESS: 'Get permissions success',
+  GET_PERMISSION_DETAIL_SUCCESS: 'Get permission detail success',
+  UPDATE_PERMISSION_SUCCESS: 'Update permission success',
+  DELETE_PERMISSION_SUCCESS: 'Delete permission success',
+  PERMISSION_NOT_FOUND: 'Permission not found'
+} as const

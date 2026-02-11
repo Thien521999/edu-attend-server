@@ -3,7 +3,22 @@ import dotenv from 'dotenv'
 import express from 'express'
 import { createServer } from 'http'
 import { defaultErrorHandler } from './middlewares/error.middlewares'
+import academicYearsRouter from './routes/academicYears.router'
+import attendancesRouter from './routes/attendances.router'
+import auditLogsRouter from './routes/auditLogs.router'
+import classesRouter from './routes/classes.router'
+import financialRouter from './routes/financial.router'
+import gradesRouter from './routes/grades.router'
 import invitationsRouter from './routes/invitations.router'
+import parentsRouter from './routes/parents.router'
+import permissionsRouter from './routes/permissions.router'
+import rolesRouter from './routes/roles.router'
+import schoolsRouter from './routes/schools.router'
+import studentsRouter from './routes/students.router'
+import subjectsRouter from './routes/subjects.router'
+import teachersRouter from './routes/teachers.router'
+import teachingAssignmentsRouter from './routes/teachingAssignments.router'
+import timetablesRouter from './routes/timetables.router'
 import usersRouter from './routes/users.router'
 import databaseService from './services/database.services'
 import { seedDatabase } from './utils/database.seeder'
@@ -47,6 +62,21 @@ app.use(express.json())
 // middlewares
 app.use('/users', usersRouter)
 app.use('/invitations', invitationsRouter)
+app.use('/classes', classesRouter)
+app.use('/grades', gradesRouter)
+app.use('/schools', schoolsRouter)
+app.use('/academic-years', academicYearsRouter)
+app.use('/students', studentsRouter)
+app.use('/parents', parentsRouter)
+app.use('/teachers', teachersRouter)
+app.use('/subjects', subjectsRouter)
+app.use('/timetables', timetablesRouter)
+app.use('/teaching-assignments', teachingAssignmentsRouter)
+app.use('/attendances', attendancesRouter)
+app.use('/financial', financialRouter)
+app.use('/audit-logs', auditLogsRouter)
+app.use('/roles', rolesRouter)
+app.use('/permissions', permissionsRouter)
 
 // cron.schedule("* * * * *", async()=> {
 //   await

@@ -1,43 +1,52 @@
 import { ObjectId } from 'mongodb'
 
-// - teacher_id: link đến teachers collection, để biết giáo viên nào quản lý học sinh này
-// - Dùng cho các bảng như Timetable (Thời khóa biểu) hoặc  AttendanceSession
-//  (Buổi điểm danh). Khi bạn muốn hiện tên giáo viên lên lịch học, bạn trỏ vào Teacher._id để lấy nhanh full_name, phone từ profile của họ.
-// Ví dụ thực tế: Một trung tâm có thể có 1 cô chủ nhiệm (Owner của lớp/học sinh) nhưng lại có nhiều giáo viên bộ môn khác nhau dạy lớp đó (teacher_id).
-
-// Các bảng mang tính thực thi giảng dạy (như TeachingAssignment, Timetable, AttendanceSession) nên
-// dùng teacher_id để trỏ vào profile người dạy.
-
 interface TimetableType {
   _id?: ObjectId
   class_id: ObjectId
   subject_id: ObjectId
-  teacher_id: ObjectId
-  day_of_week: number
-  period_from: number
-  period_to: number
-  room_name?: string
+  teacher_id?: ObjectId
+  academic_year_id: ObjectId
+  term?: string
+  start_date?: Date
+  end_date?: Date
+  day_of_week: string // 'MONDAY' etc or number
+  period: number
+  room?: string
+
+  created_at?: Date
+  updated_at?: Date
 }
 
-// Timetable: thời khóa biểu
+// Timetable: thời khóa biểu (Single Slot)
 export default class Timetable {
   _id?: ObjectId
   class_id: ObjectId // link đến classes collection
   subject_id: ObjectId // link đến subjects collection
-  teacher_id: ObjectId // link đến teachers collection
-  day_of_week: number // 0-6 (0 là Chủ Nhật)
-  period_from: number // tiết bắt đầu
-  period_to: number // tiết kết thúc
-  room_name?: string // Tên phòng học
+  teacher_id?: ObjectId // link đến teachers collection
+  academic_year_id: ObjectId
+  term: string
+  start_date?: Date
+  end_date?: Date
+  day_of_week: string
+  period: number
+  room: string
+  created_at: Date
+  updated_at: Date
 
   constructor(timetable: TimetableType) {
+    const date = new Date()
     this._id = timetable._id
     this.class_id = timetable.class_id
     this.subject_id = timetable.subject_id
     this.teacher_id = timetable.teacher_id
+    this.academic_year_id = timetable.academic_year_id
+    this.term = timetable.term || ''
+    this.start_date = timetable.start_date
+    this.end_date = timetable.end_date
     this.day_of_week = timetable.day_of_week
-    this.period_from = timetable.period_from
-    this.period_to = timetable.period_to
-    this.room_name = timetable.room_name || ''
+    this.period = timetable.period
+    this.room = timetable.room || ''
+    this.created_at = timetable.created_at || date
+    this.updated_at = timetable.updated_at || date
   }
 }
