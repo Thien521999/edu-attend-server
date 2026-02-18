@@ -35,3 +35,7 @@ export interface BatchCreateAttendanceRecordsReqBody {
     note?: string
   }[]
 }
+
+export interface GetAttendanceReportQuery {
+  date: string // ISO8601
+}

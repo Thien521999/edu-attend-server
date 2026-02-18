@@ -23,7 +23,7 @@ const academicYearsRouter = Router()
  * Path: /
  * Method: GET
  */
-academicYearsRouter.get('/', wrapRequestHandler(getAcademicYearsController))
+academicYearsRouter.get('/all', wrapRequestHandler(getAcademicYearsController))
 
 /**
  * Description: Get academic year detail

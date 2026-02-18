@@ -416,6 +416,34 @@ class UsersService {
     }
   }
 
+  async changePassword(user_id: string, password: string) {
+    await databaseService.users.updateOne(
+      { _id: new ObjectId(user_id) },
+      {
+        $set: {
+          password: hashPassword(password)
+        },
+        $currentDate: {
+          updated_at: true
+        }
+      }
+    )
+    return {
+      message: USERS_MESSAGES.CHANGE_PASSWORD_SUCCESS
+    }
+  }
+
+  async resendVerifyEmail(user_id: string, email: string) {
+    const email_verify_token = await this.signEmailVerifyToken({
+      user_id,
+      status: userVerifyStatus.Unverified
+    })
+    await sendVerifyRegisterEmail(email, email_verify_token)
+    return {
+      message: USERS_MESSAGES.RESEND_VERIFY_EMAIL_SUCCESS
+    }
+  }
+
   async getMe(user_id: string) {
     const user = await databaseService.users.findOne(
       { _id: new ObjectId(user_id) },
@@ -445,15 +473,11 @@ class UsersService {
   }
 
   async updateMe(user_id: string, payload: UpdatedMeReqBody) {
-    const _payload = payload.date_of_birth
-      ? { ...payload, date_of_birth: new Date(payload.date_of_birth) }
-      : { ...payload }
-
     const user = await databaseService.users.findOneAndUpdate(
       { _id: new ObjectId(user_id) },
       {
         $set: {
-          ...(_payload as UpdatedMeReqBody & { date_of_birth?: Date })
+          ...payload
         },
         $currentDate: {
           updated_at: true
@@ -463,7 +487,6 @@ class UsersService {
         returnDocument: 'after',
         projection: {
           password: 0,
-          email_verify_token: 0,
           forgot_password_token: 0
         }
       }

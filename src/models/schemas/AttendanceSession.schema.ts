@@ -20,8 +20,8 @@ export default class AttendanceSession {
   subject_id?: ObjectId // link đến subjects collection (Optional if FULL_DAY)
   teacher_id: ObjectId // link đến teachers collection
   date: Date // ngày điểm danh
-  type: string
-  status: string
+  type: string // 'MORNING', 'AFTERNOON', 'FULL_DAY', 'SUBJECT'
+  status: string // 'OPEN', 'LOCKED'
 
   created_at: Date
   updated_at: Date

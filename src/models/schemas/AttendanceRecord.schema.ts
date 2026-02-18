@@ -4,8 +4,8 @@ import { AttendanceStatus } from '~/constants/enums'
 interface AttendanceRecordType {
   _id?: ObjectId
   attendance_session_id: ObjectId
-  student_id: ObjectId
-  status: AttendanceStatus // 'PRESENT' | 'ABSENT' | 'LATE' | 'EXCUSED'
+  student_id: ObjectId //
+  status: AttendanceStatus // 'PRESENT': có mặt, 'ABSENT': vắng mặt, 'LATE': trễ, 'EXCUSED': có phép
   note?: string
 
   created_at?: Date
@@ -16,7 +16,7 @@ interface AttendanceRecordType {
 export default class AttendanceRecord {
   _id?: ObjectId
   attendance_session_id: ObjectId
-  student_id: ObjectId
+  student_id: ObjectId // student_id:
   status: AttendanceStatus
   note: string // Lý do vắng/đi muộn
   created_at: Date

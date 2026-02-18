@@ -24,6 +24,7 @@ import TuitionFee from '~/models/schemas/TuitionFee.schema'
 import TuitionInvoice from '~/models/schemas/TuitionInvoice.schema'
 import AuditLog from '~/models/schemas/AuditLog.schema'
 import StudentParent from '~/models/schemas/StudentParent.schema'
+import ClassJoinRequest from '~/models/schemas/ClassJoinRequest.schema'
 
 config()
 
@@ -169,6 +170,10 @@ class DatabaseService {
 
   get studentParents(): Collection<StudentParent> {
     return this.db.collection(process.env.DB_STUDENT_PARENTS_COLLECTION as string)
+  }
+
+  get classJoinRequests(): Collection<ClassJoinRequest> {
+    return this.db.collection(process.env.DB_CLASS_JOIN_REQUESTS_COLLECTION as string)
   }
 }
 

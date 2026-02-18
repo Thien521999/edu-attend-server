@@ -44,3 +44,30 @@ export const batchCreateAttendanceRecordsController = async (req: Request, res: 
     result
   })
 }
+
+export const getAttendanceReportController = async (req: Request, res: Response, next: NextFunction) => {
+  const { class_id } = req.params
+  const { date } = req.query as any
+  const result = await attendancesService.getReport({
+    class_id: class_id as string,
+    date: date as string
+  })
+  res.json({
+    message: ATTENDANCE_MESSAGES.GET_ATTENDANCE_REPORT_SUCCESS,
+    result
+  })
+}
+export const updateAttendanceSessionController = async (req: Request, res: Response, next: NextFunction) => {
+  const { id } = req.params
+  const result = await attendancesService.updateSession(id as string, req.body)
+  res.json({
+    message: ATTENDANCE_MESSAGES.UPDATE_SESSION_SUCCESS,
+    result
+  })
+}
+
+export const deleteAttendanceSessionController = async (req: Request, res: Response, next: NextFunction) => {
+  const { id } = req.params
+  const result = await attendancesService.deleteSession(id as string)
+  res.json(result)
+}

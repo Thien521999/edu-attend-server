@@ -20,6 +20,7 @@ import teachersRouter from './routes/teachers.router'
 import teachingAssignmentsRouter from './routes/teachingAssignments.router'
 import timetablesRouter from './routes/timetables.router'
 import usersRouter from './routes/users.router'
+import classJoinRequestsRouter from './routes/classJoinRequests.router'
 import databaseService from './services/database.services'
 import { seedDatabase } from './utils/database.seeder'
 // import initSocket from './utils/socket'
@@ -77,6 +78,7 @@ app.use('/financial', financialRouter)
 app.use('/audit-logs', auditLogsRouter)
 app.use('/roles', rolesRouter)
 app.use('/permissions', permissionsRouter)
+app.use('/class-join-requests', classJoinRequestsRouter)
 
 // cron.schedule("* * * * *", async()=> {
 //   await

@@ -22,3 +22,11 @@ export interface UpdateClassReqBody {
 export interface ClassParams extends ParamsDictionary {
   id: string
 }
+
+export interface GetClassesQuery {
+  name?: string
+  code?: string
+  academic_year_id?: string
+  page?: string
+  limit?: string
+}

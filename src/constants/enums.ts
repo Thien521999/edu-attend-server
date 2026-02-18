@@ -66,3 +66,9 @@ export enum ActionType {
   MARK_ATTENDANCE = 'MARK_ATTENDANCE',
   PAY_TUITION = 'PAY_TUITION'
 }
+
+export enum JoinRequestStatus {
+  PENDING = 'PENDING',
+  APPROVED = 'APPROVED',
+  REJECTED = 'REJECTED'
+}

@@ -16,10 +16,10 @@ const gradesRouter = Router()
 
 /**
  * Description: Get all grades
- * Path: /
+ * Path: /all
  * Method: GET
  */
-gradesRouter.get('/', wrapRequestHandler(getGradesController))
+gradesRouter.get('/all', wrapRequestHandler(getGradesController))
 
 /**
  * Description: Get grade detail

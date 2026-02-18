@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response } from 'express'
 import { ParamsDictionary } from 'express-serve-static-core'
 import { CLASSES_MESSAGES } from '~/constants/messages'
-import { CreateClassReqBody, UpdateClassReqBody, ClassParams } from '~/models/requests/Class.requests'
+import { CreateClassReqBody, UpdateClassReqBody, ClassParams, GetClassesQuery } from '~/models/requests/Class.requests'
 import { TokenPayload } from '~/models/requests/User.requests'
 import classesService from '~/services/classes.services'
 
@@ -14,14 +14,69 @@ export const createClassController = async (req: Request, res: Response, next: N
   })
 }
 
-export const getClassesController = async (req: Request, res: Response, next: NextFunction) => {
+export const getClassesController = async (
+  req: Request<ParamsDictionary, any, any, GetClassesQuery>,
+  res: Response,
+  next: NextFunction
+) => {
   const { user_id, role = '' } = req.decoded_authorization as TokenPayload
-  const result = await classesService.getClasses(user_id, role)
+  const query = req.query
+  const result = await classesService.getClasses({ user_id, role, query })
   res.json({
     message: CLASSES_MESSAGES.GET_CLASSES_SUCCESS,
     result
   })
 }
+
+// export const getBlogsController = async (req: Request, res: Response) => {
+//   const { user_id } = req.decoded_authorization as TokenPayload
+//   const limit = Number(req.query.limit as string)
+//   const page = Number(req.query.page as string)
+//   const audience = Number(req.query.audience as string) as BlogAudience
+//   const creatorId = req.query.creatorId as string
+//   const topic_id = Number(req.query.topic_id as string)
+//   const type = Number(req.query.type as string)
+
+//   const user = await usersService.getMe(user_id)
+
+//   const result = await blogsServices.getBlogs({
+//     user_id,
+//     audience,
+//     creatorId,
+//     topic_id,
+//     type,
+//     limit,
+//     page,
+//     followedUserIds: user?.blog_circle?.map((id) => id.toString()) || []
+//   })
+
+//   let blogs: Document[]
+//   let total_page: number
+
+//   if (Array.isArray(result)) {
+//     blogs = result
+//     total_page = 1
+//   } else {
+//     blogs = result.blogs
+//     total_page = result.total_page
+//   }
+
+//   const customBlogs = blogs.map((blog) => ({
+//     ...blog,
+//     user_views: blog?.user_views,
+//     guest_views: blog?.guest_views
+//   }))
+
+//   res.json({
+//     message: BLOG_MESSAGES.GET_ALL_BLOG_SUCCESSFULLY,
+//     data: {
+//       blogs: customBlogs,
+//       page,
+//       limit,
+//       total_page
+//     }
+//   })
+// }
 
 export const getClassDetailController = async (req: Request, res: Response, next: NextFunction) => {
   const { id } = req.params as ClassParams

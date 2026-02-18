@@ -241,6 +241,7 @@ export const ATTENDANCE_MESSAGES = {
   DELETE_SESSION_SUCCESS: 'Delete attendance session success',
   SESSION_NOT_FOUND: 'Attendance session not found',
   MARK_ATTENDANCE_SUCCESS: 'Mark attendance success',
+  GET_ATTENDANCE_REPORT_SUCCESS: 'Get attendance report success',
   GET_RECORDS_SUCCESS: 'Get attendance records success'
 } as const
 
@@ -289,4 +290,17 @@ export const PERMISSION_MESSAGES = {
   UPDATE_PERMISSION_SUCCESS: 'Update permission success',
   DELETE_PERMISSION_SUCCESS: 'Delete permission success',
   PERMISSION_NOT_FOUND: 'Permission not found'
+} as const
+
+export const JOIN_REQUEST_MESSAGES = {
+  CREATE_JOIN_REQUEST_SUCCESS: 'Join request submitted successfully',
+  GET_JOIN_REQUESTS_SUCCESS: 'Get join requests success',
+  APPROVE_JOIN_REQUEST_SUCCESS: 'Join request approved successfully',
+  REJECT_JOIN_REQUEST_SUCCESS: 'Join request rejected',
+  JOIN_REQUEST_NOT_FOUND: 'Join request not found',
+  JOIN_REQUEST_ALREADY_PROCESSED: 'Join request already processed',
+  INVALID_LINK_CODE: 'Invalid link code',
+  CLASS_NOT_FOUND: 'Class not found',
+  ALREADY_REQUESTED: 'You have already requested to join this class',
+  ALREADY_IN_CLASS: 'You are already a student in this class'
 } as const

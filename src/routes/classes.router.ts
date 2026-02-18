@@ -26,6 +26,7 @@ classesRouter.post('/', accessTokenValidator, createClassValidator, wrapRequestH
  * Path: /
  * Method: GET
  * Header: { Authorization: Bearer <access_token> }
+ * Query: {limit: number, page: number, name: string, code: string, academic_year_id: string}
  */
 classesRouter.get('/', accessTokenValidator, wrapRequestHandler(getClassesController))
 

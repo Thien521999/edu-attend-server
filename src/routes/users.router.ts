@@ -1,27 +1,34 @@
 import { Router } from 'express'
 import {
-  registerController,
-  loginController,
-  verifyEmailController,
-  refreshTokenController,
+  changePasswordController,
   forgotPasswordController,
-  verifyForgotPasswordController,
-  resetPasswordController,
+  getMeByIdController,
   getMeController,
-  getMeByIdController
+  getUsersController,
+  loginController,
+  refreshTokenController,
+  registerController,
+  resendVerifyEmailController,
+  resetPasswordController,
+  updateMeController,
+  verifyEmailController,
+  verifyForgotPasswordController
 } from '~/controllers/users.controllers'
 import { fiterMiddeware } from '~/middlewares/common.middewares'
 import {
-  registerValidator,
-  loginValidator,
-  emailVerifyTokenValidator,
-  refreshTokenValidator,
-  forgotPasswordValidator,
-  verifyForgotPasswordTokenValidator,
-  resetPasswordValidator,
   accessTokenValidator,
-  userIdValidator
+  changePasswordValidator,
+  emailVerifyTokenValidator,
+  forgotPasswordValidator,
+  loginValidator,
+  refreshTokenValidator,
+  registerValidator,
+  resetPasswordValidator,
+  updateMeValidator,
+  verifiedUserValidator,
+  verifyForgotPasswordTokenValidator
 } from '~/middlewares/users.middlewares'
+import { UpdatedMeReqBody } from '~/models/requests/User.requests'
 import { wrapRequestHandler } from '~/utils/handler'
 
 const usersRouter = Router()
@@ -112,22 +119,14 @@ usersRouter.get('/me/:_id', accessTokenValidator, wrapRequestHandler(getMeByIdCo
  * Header: { Authorization: Bearer <access_token> }
  * Body: UserSchema
  */
-// usersRouter.patch(
-//     '/me',
-//     accessTokenValidator,
-//     verifiedUserValidator,
-//     updateMeValidator,
-//     fiterMiddeware<UpdatedMeReqBody>([
-//         'name',
-//         'date_of_birth',
-//         'bio',
-//         'location',
-//         'avatar',
-//         'cover_photo',
-//         'isFirstLogin'
-//     ]),
-//     wrapRequestHandler(updateMeController)
-// )
+usersRouter.patch(
+  '/me',
+  accessTokenValidator,
+  verifiedUserValidator,
+  updateMeValidator,
+  fiterMiddeware<UpdatedMeReqBody>(['name', 'avatar', 'cover_photo']),
+  wrapRequestHandler(updateMeController)
+)
 
 /*
  * Desciption. Change password
@@ -136,42 +135,13 @@ usersRouter.get('/me/:_id', accessTokenValidator, wrapRequestHandler(getMeByIdCo
  * Header: { Authorization: Bearer <access_token> }
  * Body: {old_password: string, password: string, confirm_password: string}
  */
-// usersRouter.put(
-//     '/change-password',
-//     accessTokenValidator,
-//     verifiedUserValidator,
-//     changePasswordValidator,
-//     wrapRequestHandler(changePasswordController)
-// )
-
-/*
- * Desciption. Follow someone
- * Path: /follow
- * Method: POST
- * Header: { Authorization: Bearer <access_token> }
- * Body: { followed_user_id: string}
- */
-// usersRouter.post(
-//     '/follow',
-//     accessTokenValidator,
-//     verifiedUserValidator,
-//     followValidator,
-//     wrapRequestHandler(followController)
-// )
-
-/*
- * Desciption. UnFollow someone
- * Path: /follow/user_id
- * Method: DELETE
- * Header: { Authorization: Bearer <access_token> }
- */
-// usersRouter.delete(
-//     '/follow/:user_id',
-//     accessTokenValidator,
-//     verifiedUserValidator,
-//     unFollowValidator,
-//     wrapRequestHandler(unFollowController)
-// )
+usersRouter.put(
+  '/change-password',
+  accessTokenValidator,
+  verifiedUserValidator,
+  changePasswordValidator,
+  wrapRequestHandler(changePasswordController)
+)
 
 /*
  * Desciption. Resend verify email
@@ -180,7 +150,7 @@ usersRouter.get('/me/:_id', accessTokenValidator, wrapRequestHandler(getMeByIdCo
  * Header: { Authorization: Bearer <access_token> }
  * Body: {}
  */
-// usersRouter.post('/resend-verify-email', accessTokenValidator, wrapRequestHandler(resendVerifyEmailController))
+usersRouter.post('/resend-verify-email', accessTokenValidator, wrapRequestHandler(resendVerifyEmailController))
 
 /*
  * Desciption. Get all active users
@@ -189,6 +159,6 @@ usersRouter.get('/me/:_id', accessTokenValidator, wrapRequestHandler(getMeByIdCo
  * Header: { Authorization: Bearer <access_token> }
  * Body: {}
  */
-// usersRouter.get('/all', accessTokenValidator, wrapRequestHandler(getUsersController))
+usersRouter.get('/all', accessTokenValidator, wrapRequestHandler(getUsersController))
 
 export default usersRouter
