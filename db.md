@@ -43,6 +43,7 @@
 ```ts
 interface User {
   _id: ObjectId
+  name: String
   email: String
   password: String
   status: userVerifyStatus // 'UNVERIFIED' | 'VERIFIED' | 'BANNED'
@@ -345,7 +346,7 @@ interface RefreshToken {
   _id: ObjectId
   token: string
   user_id: ObjectId
-  expires_at: Date // Thời điểm token hết hạn
+  // expires_at: Date // Thời điểm token hết hạn
   created_at: Date
 }
 ```

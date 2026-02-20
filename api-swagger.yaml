@@ -1,0 +1,4107 @@
+openapi: 3.0.0
+info:
+  description: Edu attend API
+  version: '1.0.0'
+  title: Edu attend API
+  termsOfService: 'http://swagger.io/terms/'
+  contact:
+    email: trhoangthien1999@gmail.com
+  license:
+    name: Apache 2.0
+    url: 'http://www.apache.org/licenses/LICENSE-2.0.html'
+servers:
+  - url: 'http://localhost:4000'
+tags:
+  - name: users
+    description: Authentication
+  - name: grades
+    description: Grades
+  - name: schools
+    description: Schools
+  - name: students
+    description: Students
+  - name: subjects
+    description: Subjects
+  - name: teachers
+    description: Teachers
+  - name: classes
+    description: Classes
+  - name: academicYears
+    description: Academic years
+  - name: teachers
+    description: Teachers
+  - name: attendances
+    description: Attendances
+  - name: auditLogs
+    description: Audit logs
+  - name: permissions
+    description: Permissions
+  - name: roles
+    description: Roles
+  - name: subjects
+    description: Subjects
+  - name: timetables
+    description: Time tables
+  - name: financials
+    description: Financials
+  - name: invitations
+    description: Invitations
+  - name: parents
+    description: Parents
+  - name: teachingAssignments
+    description: Teaching assignments
+  - name: classJoinRequests
+    description: Class join requests
+
+paths:
+  /users/login:
+    post:
+      tags:
+        - users
+      summary: Login
+      operationId: login
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LoginBody'
+      responses:
+        '200':
+          description: Login success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: 'Login success'
+                  result:
+                    $ref: '#/components/schemas/SuccessAuthResponse'
+        '422':
+          description: Validation error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidationError'
+  /users/register:
+    post:
+      tags:
+        - users
+      summary: Register
+      operationId: register
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RegisterBody'
+      responses:
+        '200':
+          description: Register success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: 'Register success'
+                  result:
+                    allOf:
+                      - $ref: '#/components/schemas/SuccessAuthResponse'
+                      - type: object
+                        properties:
+                          email_verify_token:
+                            type: string
+                            example: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c'
+        '422':
+          description: Validation error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidationError'
+  /users/logout:
+    post:
+      tags:
+        - users
+      summary: Logout
+      operationId: logout
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LogoutBody'
+      security:
+        - BearerAuth: []
+      responses:
+        '200':
+          description: Logout success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: 'Logout success'
+                  result:
+                    $ref: '#/components/schemas/SuccessAuthResponse'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: 'Jwt expired'
+  /users/verify-email:
+    post:
+      tags:
+        - users
+      summary: Verify email
+      operationId: verifyEmail
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/VerifyEmailBody'
+      security:
+        - BearerAuth: []
+      responses:
+        '200':
+          description: Verify email success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: 'Verify email success'
+                  result:
+                    $ref: '#/components/schemas/SuccessAuthResponse'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: 'Jwt expired'
+  /users/forgot-password:
+    post:
+      tags:
+        - users
+      summary: Forgot password
+      operationId: forgotPassword
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ForgotPasswordBody'
+      security:
+        - BearerAuth: []
+      responses:
+        '200':
+          description: Forgot password success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: 'Check email to reset password'
+        '422':
+          description: Validation error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidationError'
+  /users/verify-forgot-password:
+    post:
+      tags:
+        - users
+      summary: Verify forgot password
+      operationId: verifyForgotPassword
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/VerifyForgotPasswordBody'
+      security:
+        - BearerAuth: []
+      responses:
+        '200':
+          description: Verify forgot password success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: 'Verify forgot password success'
+        '422':
+          description: Validation error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidationError'
+  /users/reset-password:
+    post:
+      tags:
+        - users
+      summary: Reset password
+      operationId: resetPassword
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ResetPasswordBody'
+      security:
+        - BearerAuth: []
+      responses:
+        '200':
+          description: Reset password success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: 'Reset password success'
+        '422':
+          description: Validation error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidationError'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: 'Unauthorized'
+  /users/refresh-token:
+    post:
+      tags:
+        - users
+      summary: Refresh token
+      operationId: refreshToken
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RefreshTokenBody'
+      security:
+        - BearerAuth: []
+      responses:
+        '200':
+          description: Refresh token success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: 'Refresh token success'
+                  result:
+                    $ref: '#/components/schemas/SuccessAuthResponse'
+        '422':
+          description: Validation error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidationError'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: 'Reresh token is requried || Jwt malformed'
+  /users/me:
+    get:
+      tags:
+        - users
+      summary: Get current user
+      operationId: getCurrentUser
+      security:
+        - BearerAuth: []
+      responses:
+        default:
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: 'Get my profile success'
+                  result:
+                    $ref: '#/components/schemas/User'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: 'Unauthorized'
+  /users/me/{id}:
+    get:
+      tags:
+        - users
+      summary: Get user by id
+      operationId: getUserById
+      parameters:
+        - name: id
+          in: path
+          description: ID of user to return
+          required: true
+          schema:
+            type: string
+      security:
+        - BearerAuth: []
+      responses:
+        default:
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: 'Get user by id success'
+                  result:
+                    $ref: '#/components/schemas/User'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: 'Unauthorized'
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: 'User not found'
+  /users/update/me:
+    patch:
+      tags:
+        - users
+      summary: Update my profile
+      operationId: updateMyProfile
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateMeBody'
+      security:
+        - BearerAuth: []
+      responses:
+        default:
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: 'Update my profile success'
+                  result:
+                    $ref: '#/components/schemas/User'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: 'Unauthorized'
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: 'User not found'
+  /users/resend-verify-email:
+    post:
+      tags:
+        - users
+      summary: Resend verify email
+      operationId: resendVerifyEmail
+      # requestBody:
+      #   required: true
+      #   content:
+      #     application/json:
+      #       schema:
+      #         $ref: '#/components/schemas/ResendVerifyEmailBody'
+      responses:
+        default:
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: 'Resend verify email success'
+                  result:
+                    $ref: '#/components/schemas/User'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: 'Unauthorized'
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: 'User not found'
+  /users/all:
+    get:
+      tags:
+        - users
+      summary: Get all active users
+      operationId: getAllActiveUsers
+      responses:
+        default:
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: 'Get all active users success'
+                  data:
+                    type: object
+                    properties:
+                      users:
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/User'
+                      page:
+                        type: integer
+                        example: 1
+                      limit:
+                        type: integer
+                        example: 10
+                      total:
+                        type: integer
+                        example: 10
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: 'Unauthorized'
+
+  /grades:
+    post:
+      tags:
+        - grades
+      summary: Create grade
+      operationId: createGrade
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/GradeBody'
+      responses:
+        default:
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: 'Create grade success'
+                  result:
+                    $ref: '#/components/schemas/Grade'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Unauthorized'
+        '422':
+          description: Unprocessable entity
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidationError'
+  /grades/{id}:
+    get:
+      tags:
+        - grades
+      summary: Get grade by id
+      operationId: getGradeById
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        default:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Grade'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Unauthorized'
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFound'
+  /grades/{id_update}:
+    patch:
+      tags:
+        - grades
+      summary: Update city by id
+      operationId: updateCityById
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: id_update
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/GradeBody'
+      responses:
+        default:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Grade'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Unauthorized'
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFound'
+  /grades/delete/{id}:
+    delete:
+      tags:
+        - grades
+      summary: Delete grade by id
+      operationId: deleteGradeById
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        default:
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: 'Delete grade success'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Unauthorized'
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFound'
+  /grades/all:
+    get:
+      tags:
+        - grades
+      summary: Get all grades
+      operationId: getAllGrades
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: school_id
+          in: query
+          description: Filter by school ID
+          required: false
+          schema:
+            type: string
+            format: MongoId
+        - name: page
+          in: query
+          description: Page number
+          required: false
+          schema:
+            type: integer
+            default: 1
+        - name: limit
+          in: query
+          description: Items per page
+          required: false
+          schema:
+            type: integer
+            default: 10
+      responses:
+        default:
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: 'Get all grade success'
+                  data:
+                    type: object
+                    properties:
+                      grades:
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/Grade'
+                      page:
+                        type: number
+                        example: 1
+                      limit:
+                        type: number
+                        example: 1
+                      total_page:
+                        type: number
+                        example: 1
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Unauthorized'
+
+
+    delete:
+      tags:
+        - orders
+      summary: Delete order
+      operationId: deleteOrder
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: deleteOrderId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: MongoId
+      responses:
+        default:
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: 'Delete order success'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Unauthorized'
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFound'
+
+  /students:
+    get:
+      tags:
+        - students
+      summary: Get all students
+      operationId: getStudents
+      security:
+        - BearerAuth: []
+      responses:
+        default:
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: 'Get all students success'
+                  data:
+                    type: object
+                    properties:
+                      students:
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/Student'
+        '401':
+          description: Unauthorized
+    post:
+      tags:
+        - students
+      summary: Create student
+      operationId: createStudent
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/StudentBody'
+      responses:
+        default:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Student'
+        '401':
+          description: Unauthorized
+  /students/{id}:
+    get:
+      tags:
+        - students
+      summary: Get student detail
+      operationId: getStudentDetail
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      security:
+        - BearerAuth: []
+      responses:
+        default:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Student'
+        '401':
+          description: Unauthorized
+    patch:
+      tags:
+        - students
+      summary: Update student
+      operationId: updateStudent
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/StudentBody'
+      responses:
+        default:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Student'
+        '401':
+          description: Unauthorized
+    delete:
+      tags:
+        - students
+      summary: Delete student
+      operationId: deleteStudent
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      security:
+        - BearerAuth: []
+      responses:
+        default:
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: 'Delete student success'
+        '401':
+          description: Unauthorized
+
+  /parents:
+    get:
+      tags:
+        - parents
+      summary: Get all parents
+      operationId: getParents
+      security:
+        - BearerAuth: []
+      responses:
+        default:
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: 'Get all parents success'
+                  data:
+                    type: object
+                    properties:
+                      parents:
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/Parent'
+        '401':
+          description: Unauthorized
+    post:
+      tags:
+        - parents
+      summary: Create parent
+      operationId: createParent
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ParentBody'
+      responses:
+        default:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Parent'
+        '401':
+          description: Unauthorized
+  /parents/{id}:
+    get:
+      tags:
+        - parents
+      summary: Get parent detail
+      operationId: getParentDetail
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      security:
+        - BearerAuth: []
+      responses:
+        default:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Parent'
+        '401':
+          description: Unauthorized
+
+  /parents/link-student:
+    post:
+      tags:
+        - parents
+      summary: Link student to parent
+      operationId: linkStudentParent
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LinkStudentParentBody'
+      responses:
+        default:
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: 'Linked student to parent successfully'
+        '401':
+          description: Unauthorized
+        '422':
+          description: Validation error
+
+  /parents/unlink-student/{parent_id}/{student_id}:
+    delete:
+      tags:
+        - parents
+      summary: Unlink student from parent
+      operationId: unlinkStudentParent
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: parent_id
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: student_id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        default:
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: 'Unlinked student from parent successfully'
+        '401':
+          description: Unauthorized
+
+  /parents/{id}/students:
+    get:
+      tags:
+        - parents
+      summary: Get linked students
+      operationId: getLinkedStudents
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        default:
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: 'Get linked students success'
+                  result:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Student'
+        '401':
+          description: Unauthorized
+
+    patch:
+      tags:
+        - parents
+      summary: Update parent
+      operationId: updateParent
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ParentBody'
+      responses:
+        default:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Parent'
+        '401':
+          description: Unauthorized
+    delete:
+      tags:
+        - parents
+      summary: Delete parent
+      operationId: deleteParent
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      security:
+        - BearerAuth: []
+      responses:
+        default:
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: 'Delete parent success'
+        '401':
+          description: Unauthorized
+
+  /teachers:
+    get:
+      tags:
+        - teachers
+      summary: Get all teachers
+      operationId: getTeachers
+      security:
+        - BearerAuth: []
+      responses:
+        default:
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: 'Get all teachers success'
+                  data:
+                    type: object
+                    properties:
+                      teachers:
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/Teacher'
+        '401':
+          description: Unauthorized
+    post:
+      tags:
+        - teachers
+      summary: Create teacher
+      operationId: createTeacher
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TeacherBody'
+      responses:
+        default:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Teacher'
+        '401':
+          description: Unauthorized
+  /teachers/{id}:
+    get:
+      tags:
+        - teachers
+      summary: Get teacher detail
+      operationId: getTeacherDetail
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      security:
+        - BearerAuth: []
+      responses:
+        default:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Teacher'
+        '401':
+          description: Unauthorized
+    patch:
+      tags:
+        - teachers
+      summary: Update teacher
+      operationId: updateTeacher
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TeacherBody'
+      responses:
+        default:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Teacher'
+        '401':
+          description: Unauthorized
+    delete:
+      tags:
+        - teachers
+      summary: Delete teacher
+      operationId: deleteTeacher
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      security:
+        - BearerAuth: []
+      responses:
+        default:
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: 'Delete teacher success'
+        '401':
+          description: Unauthorized
+
+  /subjects:
+    get:
+      tags:
+        - subjects
+      summary: Get all subjects
+      operationId: getSubjects
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: school_id
+          in: query
+          description: Filter by school ID
+          required: false
+          schema:
+            type: string
+            format: MongoId
+        - name: page
+          in: query
+          description: Page number
+          required: false
+          schema:
+            type: integer
+            default: 1
+        - name: limit
+          in: query
+          description: Items per page
+          required: false
+          schema:
+            type: integer
+            default: 10
+      responses:
+        default:
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: 'Get all subjects success'
+                  data:
+                    type: object
+                    properties:
+                      subjects:
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/Subject'
+        '401':
+          description: Unauthorized
+    post:
+      tags:
+        - subjects
+      summary: Create subject
+      operationId: createSubject
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SubjectBody'
+      responses:
+        default:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Subject'
+        '401':
+          description: Unauthorized
+  /subjects/{id}:
+    get:
+      tags:
+        - subjects
+      summary: Get subject detail
+      operationId: getSubjectDetail
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      security:
+        - BearerAuth: []
+      responses:
+        default:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Subject'
+        '401':
+          description: Unauthorized
+    patch:
+      tags:
+        - subjects
+      summary: Update subject
+      operationId: updateSubject
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SubjectBody'
+      responses:
+        default:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Subject'
+        '401':
+          description: Unauthorized
+    delete:
+      tags:
+        - subjects
+      summary: Delete subject
+      operationId: deleteSubject
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      security:
+        - BearerAuth: []
+      responses:
+        default:
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: 'Delete subject success'
+        '401':
+          description: Unauthorized
+
+  /timetables:
+    get:
+      tags:
+        - timetables
+      summary: Get all timetables
+      operationId: getTimetables
+      security:
+        - BearerAuth: []
+      responses:
+        default:
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: 'Get all timetables success'
+                  data:
+                    type: object
+                    properties:
+                      timetables:
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/Timetable'
+        '401':
+          description: Unauthorized
+    post:
+      tags:
+        - timetables
+      summary: Create timetable
+      operationId: createTimetable
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TimetableBody'
+      responses:
+        default:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Timetable'
+        '401':
+          description: Unauthorized
+  /timetables/{id}:
+    get:
+      tags:
+        - timetables
+      summary: Get timetable detail
+      operationId: getTimetableDetail
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      security:
+        - BearerAuth: []
+      responses:
+        default:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Timetable'
+        '401':
+          description: Unauthorized
+    patch:
+      tags:
+        - timetables
+      summary: Update timetable
+      operationId: updateTimetable
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TimetableBody'
+      responses:
+        default:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Timetable'
+        '401':
+          description: Unauthorized
+    delete:
+      tags:
+        - timetables
+      summary: Delete timetable
+      operationId: deleteTimetable
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      security:
+        - BearerAuth: []
+      responses:
+        default:
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: 'Delete timetable success'
+        '401':
+          description: Unauthorized
+
+  /teaching-assignments:
+    get:
+      tags:
+        - teachingAssignments
+      summary: Get all teaching assignments
+      operationId: getTeachingAssignments
+      security:
+        - BearerAuth: []
+      responses:
+        default:
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: 'Get all teaching assignments success'
+                  data:
+                    type: object
+                    properties:
+                      teaching_assignments:
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/TeachingAssignment'
+        '401':
+          description: Unauthorized
+    post:
+      tags:
+        - teachingAssignments
+      summary: Create teaching assignment
+      operationId: createTeachingAssignment
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TeachingAssignmentBody'
+      responses:
+        default:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TeachingAssignment'
+        '401':
+          description: Unauthorized
+  /teaching-assignments/{id}:
+    get:
+      tags:
+        - teachingAssignments
+      summary: Get teaching assignment detail
+      operationId: getTeachingAssignmentDetail
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      security:
+        - BearerAuth: []
+      responses:
+        default:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TeachingAssignment'
+        '401':
+          description: Unauthorized
+    patch:
+      tags:
+        - teachingAssignments
+      summary: Update teaching assignment
+      operationId: updateTeachingAssignment
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TeachingAssignmentBody'
+      responses:
+        default:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TeachingAssignment'
+        '401':
+          description: Unauthorized
+    delete:
+      tags:
+        - teachingAssignments
+      summary: Delete teaching assignment
+      operationId: deleteTeachingAssignment
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      security:
+        - BearerAuth: []
+      responses:
+        default:
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: 'Delete teaching assignment success'
+        '401':
+          description: Unauthorized
+  /schools:
+    post:
+      tags:
+        - schools
+      summary: Create school
+      operationId: createSchool
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SchoolBody'
+      responses:
+        default:
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: 'Create school success'
+                  result:
+                    $ref: '#/components/schemas/School'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Unauthorized'
+        '422':
+          description: Unprocessable entity
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidationError'
+  /schools/{id}:
+    get:
+      tags:
+        - schools
+      summary: Get school detail
+      operationId: getSchoolDetail
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: MongoId
+            example: '69218ec683ccdc34f38abfbd'
+      responses:
+        default:
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: 'Get school detail success'
+                  result:
+                    $ref: '#/components/schemas/School'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Unauthorized'
+        '422':
+          description: Unprocessable entity
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidationError'
+  /schools/{id_update}:
+    patch:
+      tags:
+        - schools
+      summary: Update school
+      operationId: updateSchool
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: id_update
+          in: path
+          required: true
+          schema:
+            type: string
+            format: MongoId
+            example: '69218ec683ccdc34f38abfbd'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SchoolBody'
+      responses:
+        default:
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: 'Update school success'
+                  result:
+                    $ref: '#/components/schemas/School'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Unauthorized'
+        '422':
+          description: Unprocessable entity
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidationError'
+  /schools/{id_delete}:
+    delete:
+      tags:
+        - schools
+      summary: Delete school
+      operationId: deleteSchool
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: id_delete
+          in: path
+          required: true
+          schema:
+            type: string
+            format: MongoId
+            example: '69218ec683ccdc34f38abfbd'
+      responses:
+        default:
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: 'Delete school success'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Unauthorized'
+        '422':
+          description: Unprocessable entity
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidationError'
+
+  /classes:
+    get:
+      tags:
+        - classes
+      summary: Get all classes
+      operationId: getClasses
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: name
+          in: query
+          description: Filter by class name
+          required: false
+          schema:
+            type: string
+        - name: code
+          in: query
+          description: Filter by class code
+          required: false
+          schema:
+            type: string
+        - name: page
+          in: query
+          description: Page number
+          required: false
+          schema:
+            type: integer
+            default: 1
+        - name: limit
+          in: query
+          description: Number of items per page
+          required: false
+          schema:
+            type: integer
+            default: 10
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: 'Get classes success'
+                  result:
+                    type: object
+                    properties:
+                      classes:
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/Class'
+                      total:
+                        type: integer
+                        example: 100
+                      page:
+                        type: integer
+                        example: 1
+                      limit:
+                        type: integer
+                        example: 10
+                      total_pages:
+                        type: integer
+                        example: 10
+    post:
+      tags:
+        - classes
+      summary: Create class
+      operationId: createClass
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ClassBody'
+      responses:
+        default:
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: 'Create class success'
+                  result:
+                    $ref: '#/components/schemas/Class'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Unauthorized'
+        '422':
+          description: Unprocessable entity
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidationError'
+  /classes/{id}:
+    get:
+      tags:
+        - classes
+      summary: Get class detail
+      operationId: getClassDetail
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: MongoId
+            example: '69218ec683ccdc34f38abfbd'
+      security:
+        - BearerAuth: []
+      responses:
+        default:
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: 'Get class detail success'
+                  result:
+                    $ref: '#/components/schemas/Class'
+        '401':
+          description: Unauthorized
+    patch:
+      tags:
+        - classes
+      summary: Update class
+      operationId: updateClass
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: MongoId
+            example: '69218ec683ccdc34f38abfbd'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ClassBody'
+      responses:
+        default:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Class'
+        '401':
+          description: Unauthorized
+        '422':
+          description: Unprocessable entity
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidationError'
+    delete:
+      tags:
+        - classes
+      summary: Delete class
+      operationId: deleteClass
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: MongoId
+            example: '69218ec683ccdc34f38abfbd'
+      responses:
+        default:
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: 'Delete class success'
+        '401':
+          description: Unauthorized
+
+  /academic-years/all:
+    get:
+      tags:
+        - academicYears
+      summary: Get all academic years
+      operationId: getAcademicYears
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: school_id
+          in: query
+          description: Filter by school ID
+          required: false
+          schema:
+            type: string
+            format: MongoId
+      responses:
+        default:
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: 'Get all academic years success'
+                  data:
+                    type: object
+                    properties:
+                      academic_years:
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/AcademicYear'
+  /academic-years/{id}:
+    get:
+      tags:
+        - academicYears
+      summary: Get academic year detail
+      operationId: getAcademicYearDetail
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        default:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AcademicYear'
+    patch:
+      tags:
+        - academicYears
+      summary: Update academic year
+      operationId: updateAcademicYear
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AcademicYearBody'
+      responses:
+        default:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AcademicYear'
+        '401':
+          description: Unauthorized
+    delete:
+      tags:
+        - academicYears
+      summary: Delete academic year
+      operationId: deleteAcademicYear
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      security:
+        - BearerAuth: []
+      responses:
+        default:
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: 'Delete academic year success'
+        '401':
+          description: Unauthorized
+  /academic-years:
+    post:
+      tags:
+        - academicYears
+      summary: Create academic year
+      operationId: createAcademicYear
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AcademicYearBody'
+      responses:
+        default:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AcademicYear'
+        '401':
+          description: Unauthorized
+
+  /attendances/sessions:
+    get:
+      tags:
+        - attendances
+      summary: Get all attendance sessions
+      operationId: getAttendanceSessions
+      security:
+        - BearerAuth: []
+      responses:
+        default:
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: 'Get all attendance sessions success'
+                  data:
+                    type: object
+                    properties:
+                      sessions:
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/AttendanceSession'
+        '401':
+          description: Unauthorized
+    post:
+      tags:
+        - attendances
+      summary: Create attendance session
+      operationId: createAttendanceSession
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                  - class_id
+                  - start_time
+                  - end_time
+              properties:
+                  class_id:
+                      type: string
+                      format: MongoId
+                  start_time:
+                      type: string
+                      format: ISO8601
+                  end_time:
+                      type: string
+                      format: ISO8601
+      responses:
+        default:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AttendanceSession'
+        '401':
+          description: Unauthorized
+  /attendances/sessions/{id}:
+    get:
+      tags:
+        - attendances
+      summary: Get attendance session detail
+      operationId: getAttendanceSessionDetail
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      security:
+        - BearerAuth: []
+      responses:
+        default:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AttendanceSession'
+        '401':
+          description: Unauthorized
+  /attendances/records:
+    post:
+      tags:
+        - attendances
+      summary: Batch create attendance records
+      operationId: batchCreateAttendanceRecords
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                  - session_id
+                  - records
+              properties:
+                  session_id:
+                      type: string
+                      format: MongoId
+                  records:
+                      type: array
+                      items:
+                          type: object
+                          required:
+                              - student_id
+                              - status
+                          properties:
+                              student_id:
+                                  type: string
+                              status:
+                                  type: integer
+                                  enum: [0, 1, 2] # PRESENT, ABSENT, LATE
+                              note:
+                                  type: string
+      responses:
+        default:
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: 'Batch create attendance records success'
+        '401':
+          description: Unauthorized
+        '422':
+          description: Unprocessable entity
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidationError'
+
+  /attendances/report/{class_id}:
+    get:
+      tags:
+        - attendances
+      summary: Get attendance report
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: class_id
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: date
+          in: query
+          required: true
+          schema:
+            type: string
+            format: date-time
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                  result:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        _id:
+                          type: string
+                          format: MongoId
+                        student_code:
+                          type: string
+                        full_name:
+                          type: string
+                        attendance_status:
+                          type: string
+                          enum: [PRESENT, ABSENT, LATE, EXCUSED, NOT_MARKED]
+                        attendance_note:
+                          type: string
+        '401':
+          description: Unauthorized
+
+  /financial/fees:
+    get:
+      tags:
+        - financials
+      summary: Get all fee structures
+      operationId: getFeeStructures
+      security:
+        - BearerAuth: []
+      responses:
+        default:
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: 'Get all fee structures success'
+                  data:
+                    type: object
+                    properties:
+                      fee_structures:
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/FeeStructure'
+        '401':
+          description: Unauthorized
+    post:
+      tags:
+        - financials
+      summary: Create fee structure
+      operationId: createFeeStructure
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/FeeStructureBody'
+      responses:
+        default:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FeeStructure'
+        '401':
+          description: Unauthorized
+  /financial/fees/{id}:
+    get:
+      tags:
+        - financials
+      summary: Get fee structure detail
+      operationId: getFeeStructureDetail
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      security:
+        - BearerAuth: []
+      responses:
+        default:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FeeStructure'
+        '401':
+          description: Unauthorized
+
+  /financial/invoices:
+    get:
+      tags:
+        - financials
+      summary: Get all invoices
+      operationId: getInvoices
+      security:
+        - BearerAuth: []
+      responses:
+        default:
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: 'Get all invoices success'
+                  data:
+                    type: object
+                    properties:
+                      invoices:
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/Invoice'
+        '401':
+          description: Unauthorized
+    post:
+      tags:
+        - financials
+      summary: Create invoice
+      operationId: createInvoice
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/InvoiceBody'
+      responses:
+        default:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Invoice'
+        '401':
+          description: Unauthorized
+  /financial/invoices/{id}:
+    get:
+      tags:
+        - financials
+      summary: Get invoice detail
+      operationId: getInvoiceDetail
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      security:
+        - BearerAuth: []
+      responses:
+        default:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Invoice'
+        '401':
+          description: Unauthorized
+
+  /audit-logs:
+    get:
+      tags:
+        - auditLogs
+      summary: Get all audit logs
+      operationId: getAuditLogs
+      security:
+        - BearerAuth: []
+      responses:
+        default:
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: 'Get all audit logs success'
+                  data:
+                    type: object
+                    properties:
+                      audit_logs:
+                        type: array
+                        items:
+                          type: object # Todo: define AuditLog schema if needed, or stick to simple object for now
+        '401':
+          description: Unauthorized
+
+  /permissions:
+    get:
+      tags:
+        - permissions
+      summary: Get all permissions
+      operationId: getPermissions
+      security:
+        - BearerAuth: []
+      responses:
+        default:
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: 'Get all permissions success'
+                  data:
+                    type: object
+                    properties:
+                      permissions:
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/Permission'
+        '401':
+          description: Unauthorized
+
+  /roles:
+    get:
+      tags:
+        - roles
+      summary: Get all roles
+      operationId: getRoles
+      security:
+        - BearerAuth: []
+      responses:
+        default:
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: 'Get all roles success'
+                  result:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Role'
+        '401':
+          description: Unauthorized
+  /roles/{id}:
+    get:
+      tags:
+        - roles
+      summary: Get role detail
+      operationId: getRoleDetail
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      security:
+        - BearerAuth: []
+      responses:
+        default:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Role'
+        '401':
+          description: Unauthorized
+
+  /roles/assign:
+    post:
+      tags:
+        - roles
+      summary: Assign role to user
+      operationId: assignRole
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AssignRoleBody'
+      responses:
+        default:
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: 'Assigned role to user successfully'
+        '401':
+          description: Unauthorized
+
+  /roles/unassign/{user_id}/{role_id}:
+    delete:
+      tags:
+        - roles
+      summary: Unassign role from user
+      operationId: unassignRole
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: user_id
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: role_id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        default:
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: 'Unassigned role from user successfully'
+        '401':
+          description: Unauthorized
+
+  /roles/user/{user_id}:
+    get:
+      tags:
+        - roles
+      summary: Get user roles
+      operationId: getUserRoles
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: user_id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        default:
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: 'Get user roles successfully'
+                  result:
+                    type: array
+                    items:
+                      type: object # UserRole info
+        '401':
+          description: Unauthorized
+
+  /permissions/assign:
+    post:
+      tags:
+        - permissions
+      summary: Assign permission to role
+      operationId: assignPermission
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AssignPermissionBody'
+      responses:
+        default:
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: 'Assigned permission to role successfully'
+        '401':
+          description: Unauthorized
+
+  /permissions/unassign/{role_id}/{permission_id}:
+    delete:
+      tags:
+        - permissions
+      summary: Unassign permission from role
+      operationId: unassignPermission
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: role_id
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: permission_id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        default:
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: 'Unassigned permission from role successfully'
+        '401':
+          description: Unauthorized
+
+  /permissions/role/{role_id}:
+    get:
+      tags:
+        - permissions
+      summary: Get role permissions
+      operationId: getRolePermissions
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: role_id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        default:
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: 'Get role permissions successfully'
+                  result:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Permission'
+        '401':
+          description: Unauthorized
+
+  /permissions/{id}:
+    get:
+      tags:
+        - permissions
+      summary: Get permission detail
+      operationId: getPermissionDetail
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      security:
+        - BearerAuth: []
+      responses:
+        default:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Permission'
+        '401':
+          description: Unauthorized
+
+  /invitations/invite:
+    post:
+      tags:
+        - invitations
+      summary: Invite teacher
+      operationId: inviteTeacher
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/InvitationBody'
+      responses:
+        default:
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: 'Invite teacher success'
+        '401':
+          description: Unauthorized
+  /invitations/accept:
+    post:
+      tags:
+        - invitations
+      summary: Accept invitation
+      operationId: acceptInvitation
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AcceptInvitationBody'
+      responses:
+        default:
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: 'Accept invitation success'
+        '400':
+          description: Bad Request
+
+  /class-join-requests:
+    post:
+      tags:
+        - classJoinRequests
+      summary: Student submits join request
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateJoinRequestReqBody'
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                  result:
+                    $ref: '#/components/schemas/ClassJoinRequest'
+        '400':
+          description: Bad Request
+        '401':
+          description: Unauthorized
+        '404':
+          description: Class not found
+
+  /class-join-requests/me:
+    get:
+      tags:
+        - classJoinRequests
+      summary: Get my join requests (Student)
+      security:
+        - BearerAuth: []
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                  result:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/ClassJoinRequest'
+        '401':
+          description: Unauthorized
+
+  /class-join-requests/class/{class_id}:
+    get:
+      tags:
+        - classJoinRequests
+      summary: Get join requests for a class (Teacher)
+      parameters:
+        - name: class_id
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: status
+          in: query
+          required: false
+          schema:
+            type: string
+            enum: [PENDING, APPROVED, REJECTED]
+        - name: page
+          in: query
+          required: false
+          schema:
+            type: integer
+            default: 1
+        - name: limit
+          in: query
+          required: false
+          schema:
+            type: integer
+            default: 10
+      security:
+        - BearerAuth: []
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                  result:
+                    type: object
+                    properties:
+                      requests:
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/ClassJoinRequest'
+                      total:
+                        type: integer
+                      page:
+                        type: integer
+                      limit:
+                        type: integer
+                      total_pages:
+                        type: integer
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Class not found
+
+  /class-join-requests/{request_id}/approve:
+    post:
+      tags:
+        - classJoinRequests
+      summary: Approve join request (Teacher)
+      parameters:
+        - name: request_id
+          in: path
+          required: true
+          schema:
+            type: string
+      security:
+        - BearerAuth: []
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                  student:
+                    $ref: '#/components/schemas/Student'
+        '400':
+          description: Bad Request
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Request not found
+
+  /class-join-requests/{request_id}/reject:
+    post:
+      tags:
+        - classJoinRequests
+      summary: Reject join request (Teacher)
+      parameters:
+        - name: request_id
+          in: path
+          required: true
+          schema:
+            type: string
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RejectJoinRequestReqBody'
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+        '400':
+          description: Bad Request
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Request not found
+
+components:
+  schemas:
+    ClassJoinRequest:
+      type: object
+      properties:
+        _id:
+          type: string
+          format: MongoId
+        user_id:
+          type: string
+          format: MongoId
+        class_id:
+          type: string
+          format: MongoId
+        full_name:
+          type: string
+        student_code:
+          type: string
+        status:
+          type: string
+          enum: [PENDING, APPROVED, REJECTED]
+        rejected_reason:
+          type: string
+        created_at:
+          type: string
+          format: ISO8601
+        updated_at:
+          type: string
+          format: ISO8601
+
+    CreateJoinRequestReqBody:
+      type: object
+      required:
+        - link_code
+        - full_name
+      properties:
+        link_code:
+          type: string
+        full_name:
+          type: string
+        student_code:
+          type: string
+
+    RejectJoinRequestReqBody:
+      type: object
+      properties:
+        reason:
+          type: string
+
+    Unauthorized:
+      type: object
+      properties:
+        message:
+          type: string
+          example: 'Unauthorized'
+    RegisterBody:
+      type: object
+      properties:
+        name:
+          type: string
+          example: 'Thien'
+        email:
+          type: string
+          example: 'tranhoangthiendev@gmail.com'
+        password:
+          type: string
+          example: 'aA123456@'
+        confirm_password:
+          type: string
+          example: 'aA123456@'
+    LoginBody:
+      type: object
+      properties:
+        email:
+          type: string
+          example: 'admin@eduattend.com'
+        password:
+          type: string
+          example: 'Admin@123'
+    LogoutBody:
+      type: object
+      properties:
+        refresh_token:
+          type: string
+          example: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c'
+    UpdateMeBody:
+      type: object
+      properties:
+        name:
+          type: string
+          example: 'Thien'
+        email:
+          type: string
+          example: 'tranhoangthiendev@gmail.com'
+        role_id:
+          type: string
+          example: '69217790c7ca2c30220a3b41'
+        phoneNumber:
+          type: string
+          example: '0123456789'
+        address:
+          type: string
+          example: '123 Main St, Anytown, USA'
+        avatar:
+          type: string
+          example: 'https://example.com/avatar.jpg'
+    VerifyEmailBody:
+      type: object
+      properties:
+        email_verify_token:
+          type: string
+          example: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c'
+    ForgotPasswordBody:
+      type: object
+      properties:
+        email:
+          type: string
+          example: 'tranhoangthiendev@gmail.com'
+    VerifyForgotPasswordBody:
+      type: object
+      properties:
+        forgot_password_token:
+          type: string
+          example: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c'
+    ResetPasswordBody:
+      type: object
+      properties:
+        forgot_password_token:
+          type: string
+          example: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c'
+        password:
+          type: string
+          example: 'aA123456@'
+        confirm_password:
+          type: string
+          example: 'aA123456@'
+    RefreshTokenBody:
+      type: object
+      properties:
+        refresh_token:
+          type: string
+          example: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c'
+    SuccessAuthResponse:
+      type: object
+      properties:
+        access_token:
+          type: string
+          example: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c'
+        refresh_token:
+          type: string
+          example: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c'
+        role:
+          type: string
+          enum:
+            - SUPER_ADMIN
+            - TEACHER
+            - USER
+          example: 'SUPER_ADMIN'
+    ValidationError:
+      type: object
+      properties:
+        message:
+          type: string
+          example: 'Validation error'
+        errors:
+          type: object
+          properties:
+            email:
+              type: object
+              properties:
+                type:
+                  type: string
+                  example: 'field'
+                value:
+                  type: string
+                  example: 'tranhoangthiendev@gmail.com'
+                msg:
+                  type: string
+                  example: 'Email or password is incorrect'
+                path:
+                  type: string
+                  example: 'email'
+                location:
+                  type: string
+                  example: 'body'
+    User:
+      type: object
+      properties:
+        _id:
+          type: string
+          format: MongoId
+          example: '69218ec683ccdc34f38abfbd'
+        name:
+          type: string
+          example: 'Thien'
+        email:
+          type: string
+          example: 'tranhoangthiendev@gmail.com'
+        avatar:
+          type: string
+          example: 'https://example.com/avatar.jpg'
+        cover_photo:
+          type: string
+          example: 'https://example.com/cover_photo.jpg'
+        status:
+          $ref: '#/components/schemas/VerifyStatus'
+
+          type: array
+          items:
+            type: string
+            format: MongoId
+          example:
+            - ['692199ceb7ff6ed90b9fba9e', '692199ceb7ff6ed90b9fba9e']
+        created_at:
+          type: string
+          format: ISO8601
+          example: '2025-11-22T10:21:58.648Z'
+        updated_at:
+          type: string
+          format: ISO8601
+          example: '2025-11-22T10:45:46.131Z'
+    VerifyStatus:
+      type: integer
+      enum: [Unverified, Verified, Banned]
+      example: 1
+    GradeBody:
+      type: object
+      properties:
+        name:
+          type: string
+          example: '10'
+        level:
+          type: number
+          example: 10
+    Grade:
+      type: object
+      properties:
+        _id:
+          type: string
+          format: MongoId
+          example: '69218ec683ccdc34f38abfbd'
+        name:
+          type: string
+          example: 'HCM'
+        level:
+          type: number
+          example: 10
+
+    NotFound:
+      type: object
+      properties:
+        message:
+          type: string
+          example: 'Not found'
+
+    SchoolBody:
+      type: object
+      properties:
+        name:
+          type: string
+          example: 'School'
+        code:
+          type: string
+          example: 'SCH001'
+        address:
+          type: string
+          example: '123 Main St'
+        phone:
+          type: string
+          example: '123456789'
+        email:
+          type: string
+          example: [EMAIL_ADDRESS]
+
+    School:
+      type: object
+      properties:
+        _id:
+          type: string
+          format: MongoId
+          example: '69218ec683ccdc34f38abfbd'
+        name:
+          type: string
+          example: 'School'
+        code:
+          type: string
+          example: 'SCH001'
+        address:
+          type: string
+          example: '123 Main St'
+        phone:
+          type: string
+          example: '123456789'
+        email:
+          type: string
+          example: [EMAIL_ADDRESS]
+        created_at:
+          type: string
+          format: ISO8601
+          example: '2025-11-22T10:21:58.648Z'
+        updated_at:
+          type: string
+          format: ISO8601
+          example: '2025-11-22T10:45:46.131Z'
+
+    AcademicYearBody:
+      type: object
+      properties:
+        name:
+          type: string
+          example: '2025-2026'
+        start_date:
+          type: string
+          format: ISO8601
+          example: '2025-11-22T10:21:58.648Z'
+        end_date:
+          type: string
+          format: ISO8601
+          example: '2025-11-22T10:45:46.131Z'
+        is_active:
+          type: boolean
+          example: true
+
+    AcademicYear:
+      type: object
+      properties:
+        _id:
+          type: string
+          format: MongoId
+          example: '69218ec683ccdc34f38abfbd'
+        name:
+          type: string
+          example: '2025-2026'
+        start_date:
+          type: string
+          format: ISO8601
+          example: '2025-11-22T10:21:58.648Z'
+        end_date:
+          type: string
+          format: ISO8601
+          example: '2025-11-22T10:45:46.131Z'
+        is_active:
+          type: boolean
+          example: true
+        created_at:
+          type: string
+          format: ISO8601
+          example: '2025-11-22T10:21:58.648Z'
+        updated_at:
+          type: string
+          format: ISO8601
+          example: '2025-11-22T10:45:46.131Z'
+
+    ClassBody:
+      type: object
+      properties:
+        name:
+          type: string
+          example: 'Class'
+        code:
+          type: string
+          example: 'CLS001'
+        grade_id:
+          type: string
+          format: MongoId
+          example: '69218ec683ccdc34f38abfbd'
+        school_id:
+          type: string
+          format: MongoId
+          example: '69218ec683ccdc34f38abfbd'
+        academic_year_id:
+          type: string
+          format: MongoId
+          example: '69218ec683ccdc34f38abfbd'
+
+    Class:
+      type: object
+      properties:
+        _id:
+          type: string
+          format: MongoId
+          example: '69218ec683ccdc34f38abfbd'
+        name:
+          type: string
+          example: 'Class'
+        code:
+          type: string
+          example: 'CLS001'
+        grade_id:
+          type: string
+          format: MongoId
+          example: '69218ec683ccdc34f38abfbd'
+        school_id:
+          type: string
+          format: MongoId
+          example: '69218ec683ccdc34f38abfbd'
+        academic_year_id:
+          type: string
+          format: MongoId
+          example: '69218ec683ccdc34f38abfbd'
+        created_at:
+          type: string
+          format: ISO8601
+          example: '2025-11-22T10:21:58.648Z'
+        updated_at:
+          type: string
+          format: ISO8601
+          example: '2025-11-22T10:45:46.131Z'
+
+    AttendanceSessionBody:
+      type: object
+      properties:
+        class_id:
+          type: string
+          format: MongoId
+          example: '69218ec683ccdc34f38abfbd'
+        subject_id:
+          type: string
+          format: MongoId
+          example: '69218ec683ccdc34f38abfbd'
+        teacher_id:
+          type: string
+          format: MongoId
+          example: '69218ec683ccdc34f38abfbd'
+        date:
+          type: string
+          format: ISO8601
+          example: '2025-11-22T10:21:58.648Z'
+        type:
+          type: string
+          example: 'MORNING'
+        status:
+          type: string
+          example: 'OPEN'
+
+    AttendanceSession:
+      type: object
+      properties:
+        _id:
+          type: string
+          format: MongoId
+          example: '69218ec683ccdc34f38abfbd'
+        class_id:
+          type: string
+          format: MongoId
+          example: '69218ec683ccdc34f38abfbd'
+        start_time:
+          type: string
+          format: ISO8601
+          example: '2025-11-22T10:21:58.648Z'
+        end_time:
+          type: string
+          format: ISO8601
+          example: '2025-11-22T10:45:46.131Z'
+        created_at:
+          type: string
+          format: ISO8601
+          example: '2025-11-22T10:21:58.648Z'
+        updated_at:
+          type: string
+          format: ISO8601
+          example: '2025-11-22T10:45:46.131Z'
+
+    StudentBody:
+      type: object
+      required:
+        - school_id
+        - student_code
+        - full_name
+        - class_id
+        - academic_year_id
+      properties:
+        school_id:
+          type: string
+          format: MongoId
+        student_code:
+          type: string
+        full_name:
+          type: string
+        class_id:
+          type: string
+          format: MongoId
+        academic_year_id:
+          type: string
+          format: MongoId
+        status:
+          type: integer
+          enum: [0, 1, 2, 3] # ENROLLED, GRADUATED, DROPPED_OUT, SUSPENDED
+        date_of_birth:
+          type: string
+          format: ISO8601
+        address:
+          type: string
+        gender:
+          type: string
+        phone:
+          type: string
+        scholarship_percentage:
+          type: number
+        scholarship_description:
+          type: string
+
+    Student:
+      type: object
+      properties:
+        _id:
+          type: string
+          format: MongoId
+        student_code:
+          type: string
+        full_name:
+          type: string
+        class_id:
+          type: string
+          format: MongoId
+        school_id:
+          type: string
+          format: MongoId
+        status:
+          type: integer
+        created_at:
+          type: string
+          format: ISO8601
+        updated_at:
+          type: string
+          format: ISO8601
+
+    ParentBody:
+      type: object
+      required:
+        - full_name
+        - phone
+      properties:
+        full_name:
+          type: string
+        phone:
+          type: string
+        email:
+          type: string
+        address:
+          type: string
+        job:
+          type: string
+
+    Parent:
+      type: object
+      properties:
+        _id:
+          type: string
+          format: MongoId
+        user_id:
+          type: string
+          format: MongoId
+        full_name:
+          type: string
+        phone:
+          type: string
+        students:
+          type: array
+          items:
+            type: string
+            format: MongoId
+        created_at:
+          type: string
+          format: ISO8601
+        updated_at:
+          type: string
+          format: ISO8601
+
+    TeacherBody:
+      type: object
+      required:
+        - full_name
+        - email
+        - phone
+      properties:
+        full_name:
+          type: string
+        email:
+          type: string
+        phone:
+          type: string
+        address:
+          type: string
+        date_of_birth:
+          type: string
+          format: ISO8601
+        start_date:
+          type: string
+          format: ISO8601
+        specialization:
+          type: string
+
+    Teacher:
+      type: object
+      properties:
+        _id:
+          type: string
+          format: MongoId
+        user_id:
+          type: string
+          format: MongoId
+        full_name:
+          type: string
+        email:
+          type: string
+        specialization:
+          type: string
+        status:
+          type: string
+        created_at:
+          type: string
+          format: ISO8601
+        updated_at:
+          type: string
+          format: ISO8601
+
+    SubjectBody:
+      type: object
+      required:
+        - name
+        - code
+      properties:
+        name:
+          type: string
+        code:
+          type: string
+        description:
+          type: string
+        credits:
+          type: number
+
+    Subject:
+      type: object
+      properties:
+        _id:
+          type: string
+          format: MongoId
+        name:
+          type: string
+        code:
+          type: string
+        is_active:
+          type: boolean
+        created_at:
+          type: string
+          format: ISO8601
+        updated_at:
+          type: string
+          format: ISO8601
+
+    TimetableBody:
+      type: object
+      required:
+        - class_id
+        - academic_year_id
+        - start_date
+        - end_date
+        - schedule
+      properties:
+        class_id:
+          type: string
+          format: MongoId
+        academic_year_id:
+          type: string
+          format: MongoId
+        term:
+          type: string
+        start_date:
+          type: string
+          format: ISO8601
+        end_date:
+          type: string
+          format: ISO8601
+        schedule:
+          type: array
+          items:
+            type: object
+            required:
+              - day_of_week
+              - period
+              - subject_id
+            properties:
+              day_of_week:
+                type: string
+              period:
+                type: number
+              subject_id:
+                type: string
+                format: MongoId
+              teacher_id:
+                type: string
+                format: MongoId
+              room:
+                type: string
+
+    Timetable:
+      type: object
+      properties:
+        _id:
+          type: string
+          format: MongoId
+        class_id:
+          type: string
+          format: MongoId
+        academic_year_id:
+          type: string
+          format: MongoId
+        start_date:
+          type: string
+          format: ISO8601
+        end_date:
+          type: string
+          format: ISO8601
+        schedule:
+          type: array
+          items:
+            type: object
+        created_at:
+          type: string
+          format: ISO8601
+        updated_at:
+          type: string
+          format: ISO8601
+
+    TeachingAssignmentBody:
+      type: object
+      required:
+        - teacher_id
+        - class_id
+        - subject_id
+        - academic_year_id
+      properties:
+        teacher_id:
+          type: string
+          format: MongoId
+        class_id:
+          type: string
+          format: MongoId
+        subject_id:
+          type: string
+          format: MongoId
+        academic_year_id:
+          type: string
+          format: MongoId
+        start_date:
+          type: string
+          format: ISO8601
+        end_date:
+          type: string
+          format: ISO8601
+
+    TeachingAssignment:
+      type: object
+      properties:
+        _id:
+          type: string
+          format: MongoId
+        teacher_id:
+          type: string
+          format: MongoId
+        class_id:
+          type: string
+          format: MongoId
+        subject_id:
+          type: string
+          format: MongoId
+        status:
+          type: string
+        created_at:
+          type: string
+          format: ISO8601
+        updated_at:
+          type: string
+          format: ISO8601
+
+    FeeStructureBody:
+      type: object
+      required:
+        - school_id
+        - name
+        - base_amount
+        - billing_cycle
+        - academic_year_id
+      properties:
+        school_id:
+          type: string
+          format: MongoId
+        name:
+          type: string
+        description:
+          type: string
+        base_amount:
+          type: number
+        currency:
+          type: string
+        billing_cycle:
+          type: string
+          enum: ['MONTHLY', 'YEARLY', 'ONE_TIME']
+        academic_year_id:
+          type: string
+          format: MongoId
+        grade_id:
+          type: string
+          format: MongoId
+
+    FeeStructure:
+      type: object
+      properties:
+        _id:
+          type: string
+          format: MongoId
+        school_id:
+          type: string
+          format: MongoId
+        name:
+          type: string
+        base_amount:
+          type: number
+        billing_cycle:
+          type: string
+        academic_year_id:
+          type: string
+          format: MongoId
+        created_at:
+          type: string
+          format: ISO8601
+        updated_at:
+          type: string
+          format: ISO8601
+
+    InvoiceBody:
+      type: object
+      required:
+        - student_id
+        - school_id
+        - fee_structure_id
+        - academic_year_id
+        - billing_month
+        - billing_year
+        - base_amount
+        - due_date
+      properties:
+        student_id:
+          type: string
+          format: MongoId
+        school_id:
+          type: string
+          format: MongoId
+        fee_structure_id:
+          type: string
+          format: MongoId
+        academic_year_id:
+          type: string
+          format: MongoId
+        billing_month:
+          type: number
+        billing_year:
+          type: number
+        base_amount:
+          type: number
+        due_date:
+          type: string
+          format: ISO8601
+        description:
+          type: string
+
+    Invoice:
+      type: object
+      properties:
+        _id:
+          type: string
+          format: MongoId
+        student_id:
+          type: string
+          format: MongoId
+        fee_structure_id:
+          type: string
+          format: MongoId
+        amount:
+          type: number
+        status:
+          type: string
+        due_date:
+          type: string
+          format: ISO8601
+        created_at:
+          type: string
+          format: ISO8601
+        updated_at:
+          type: string
+          format: ISO8601
+
+    Permission:
+      type: object
+      properties:
+        _id:
+          type: string
+          format: MongoId
+        name:
+          type: string
+        code:
+          type: string
+        description:
+          type: string
+        module:
+          type: string
+        created_at:
+          type: string
+          format: ISO8601
+        updated_at:
+          type: string
+          format: ISO8601
+
+    InvitationBody:
+      type: object
+      required:
+        - email
+        - name
+      properties:
+        email:
+          type: string
+        name:
+          type: string
+
+    AcceptInvitationBody:
+      type: object
+      required:
+        - token
+        - password
+      properties:
+        token:
+          type: string
+        password:
+          type: string
+
+    Role:
+      type: object
+      properties:
+        _id:
+          type: string
+          format: MongoId
+        name:
+          type: string
+        code:
+          type: string
+        description:
+          type: string
+        permissions:
+          type: array
+          items:
+            $ref: '#/components/schemas/Permission'
+        created_at:
+          type: string
+          format: ISO8601
+        updated_at:
+          type: string
+          format: ISO8601
+
+    LinkStudentParentBody:
+      type: object
+      required:
+        - student_id
+        - parent_id
+        - relationship
+      properties:
+        student_id:
+          type: string
+          format: MongoId
+        parent_id:
+          type: string
+          format: MongoId
+        relationship:
+          type: string
+          enum: ['FATHER', 'MOTHER', 'GUARDIAN', 'OTHER']
+
+    AssignRoleBody:
+      type: object
+      required:
+        - user_id
+        - role_id
+        - scope_type
+      properties:
+        user_id:
+          type: string
+          format: MongoId
+        role_id:
+          type: string
+          format: MongoId
+        scope_type:
+          type: string
+          enum: ['SYSTEM', 'CLASS', 'STUDENT']
+        scope_id:
+          type: string
+          format: MongoId
+
+    AssignPermissionBody:
+      type: object
+      required:
+        - role_id
+        - permission_id
+      properties:
+        role_id:
+          type: string
+          format: MongoId
+        permission_id:
+          type: string
+          format: MongoId
+
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
