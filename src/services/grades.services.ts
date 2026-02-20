@@ -9,14 +9,26 @@ class GradesService {
     const result = await databaseService.grades.insertOne(
       new Grade({
         ...payload,
+        school_id: new ObjectId(payload.school_id),
         _id: grade_id
       })
     )
     return await databaseService.grades.findOne({ _id: result.insertedId })
   }
 
-  async getGrades() {
-    return await databaseService.grades.find({}).toArray()
+  async getGrades({ page, limit, school_id }: { page: number; limit: number; school_id?: string }) {
+    const filter = school_id ? { school_id: new ObjectId(school_id) } : {}
+    const grades = await databaseService.grades
+      .find(filter)
+      .skip((page - 1) * limit)
+      .limit(limit)
+      .toArray()
+    const total = await databaseService.grades.countDocuments(filter)
+    return {
+      grades,
+      total_page: Math.ceil(total / limit),
+      total
+    }
   }
 
   async getGradeDetail(id: string) {
@@ -24,9 +36,12 @@ class GradesService {
   }
 
   async updateGrade(id: string, payload: UpdateGradeReqBody) {
+    const updateData: any = { ...payload }
+    if (payload.school_id) updateData.school_id = new ObjectId(payload.school_id)
+
     const result = await databaseService.grades.findOneAndUpdate(
       { _id: new ObjectId(id) },
-      { $set: payload },
+      { $set: updateData },
       { returnDocument: 'after' }
     )
     return result

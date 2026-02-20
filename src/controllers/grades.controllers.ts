@@ -14,7 +14,12 @@ export const createGradeController = async (req: Request, res: Response) => {
 }
 
 export const getGradesController = async (req: Request, res: Response) => {
-  const result = await gradesService.getGrades()
+  const { page, limit, school_id } = req.query
+  const result = await gradesService.getGrades({
+    page: Number(page as string) || 1,
+    limit: Number(limit as string) || 10,
+    school_id: school_id as string
+  })
   res.json({
     message: GRADE_MESSAGES.GET_GRADES_SUCCESS,
     result

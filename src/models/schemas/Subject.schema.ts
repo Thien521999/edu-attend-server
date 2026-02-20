@@ -4,6 +4,7 @@ interface SubjectType {
   _id?: ObjectId
   name: string
   code: string
+  school_id: ObjectId
   description?: string
   credits?: number
   is_active?: boolean
@@ -17,6 +18,7 @@ export default class Subject {
   _id?: ObjectId
   name: string // Tên môn học (VD: "Toán")
   code: string // Mã môn học (VD: "MATH")
+  school_id: ObjectId
   description?: string // Mô tả môn học
   credits: number
   is_active: boolean
@@ -29,6 +31,7 @@ export default class Subject {
     this._id = subject._id
     this.name = subject.name
     this.code = subject.code
+    this.school_id = subject.school_id
     this.description = subject.description || ''
     this.credits = subject.credits || 0
     this.is_active = subject.is_active !== undefined ? subject.is_active : true

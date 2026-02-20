@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from 'express'
-import { PARENT_MESSAGES } from '~/constants/messages'
+import { PARENT_MESSAGES, STUDENT_PARENT_MESSAGES } from '~/constants/messages'
 import { TokenPayload } from '~/models/requests/User.requests'
 import parentsService from '~/services/parents.services'
 
@@ -53,6 +53,32 @@ export const deleteParentController = async (req: Request, res: Response, next: 
   const result = await parentsService.deleteParent(id as string)
   res.json({
     message: PARENT_MESSAGES.DELETE_PARENT_SUCCESS,
+    result
+  })
+}
+
+export const linkStudentController = async (req: Request, res: Response, next: NextFunction) => {
+  const result = await parentsService.linkToStudent(req.body)
+  res.json({
+    message: STUDENT_PARENT_MESSAGES.LINK_SUCCESS,
+    result
+  })
+}
+
+export const unlinkStudentController = async (req: Request, res: Response, next: NextFunction) => {
+  const { parent_id, student_id } = req.params
+  const result = await parentsService.unlinkFromStudent(student_id as string, parent_id as string)
+  res.json({
+    message: STUDENT_PARENT_MESSAGES.UNLINK_SUCCESS,
+    result
+  })
+}
+
+export const getLinkedStudentsController = async (req: Request, res: Response, next: NextFunction) => {
+  const { id } = req.params
+  const result = await parentsService.getLinkedStudents(id as string)
+  res.json({
+    message: STUDENT_PARENT_MESSAGES.GET_STUDENTS_SUCCESS,
     result
   })
 }

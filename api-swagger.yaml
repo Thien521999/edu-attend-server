@@ -713,6 +713,28 @@ paths:
       operationId: getAllGrades
       security:
         - BearerAuth: []
+      parameters:
+        - name: school_id
+          in: query
+          description: Filter by school ID
+          required: false
+          schema:
+            type: string
+            format: MongoId
+        - name: page
+          in: query
+          description: Page number
+          required: false
+          schema:
+            type: integer
+            default: 1
+        - name: limit
+          in: query
+          description: Items per page
+          required: false
+          schema:
+            type: integer
+            default: 10
       responses:
         default:
           description: Success
@@ -987,6 +1009,102 @@ paths:
                 $ref: '#/components/schemas/Parent'
         '401':
           description: Unauthorized
+
+  /parents/link-student:
+    post:
+      tags:
+        - parents
+      summary: Link student to parent
+      operationId: linkStudentParent
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LinkStudentParentBody'
+      responses:
+        default:
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: 'Linked student to parent successfully'
+        '401':
+          description: Unauthorized
+        '422':
+          description: Validation error
+
+  /parents/unlink-student/{parent_id}/{student_id}:
+    delete:
+      tags:
+        - parents
+      summary: Unlink student from parent
+      operationId: unlinkStudentParent
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: parent_id
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: student_id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        default:
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: 'Unlinked student from parent successfully'
+        '401':
+          description: Unauthorized
+
+  /parents/{id}/students:
+    get:
+      tags:
+        - parents
+      summary: Get linked students
+      operationId: getLinkedStudents
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        default:
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: 'Get linked students success'
+                  result:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Student'
+        '401':
+          description: Unauthorized
+
     patch:
       tags:
         - parents
@@ -1178,6 +1296,28 @@ paths:
       operationId: getSubjects
       security:
         - BearerAuth: []
+      parameters:
+        - name: school_id
+          in: query
+          description: Filter by school ID
+          required: false
+          schema:
+            type: string
+            format: MongoId
+        - name: page
+          in: query
+          description: Page number
+          required: false
+          schema:
+            type: integer
+            default: 1
+        - name: limit
+          in: query
+          description: Items per page
+          required: false
+          schema:
+            type: integer
+            default: 10
       responses:
         default:
           description: Success
@@ -1925,6 +2065,16 @@ paths:
         - academicYears
       summary: Get all academic years
       operationId: getAcademicYears
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: school_id
+          in: query
+          description: Filter by school ID
+          required: false
+          schema:
+            type: string
+            format: MongoId
       responses:
         default:
           description: Success
@@ -2437,6 +2587,242 @@ paths:
                           $ref: '#/components/schemas/Permission'
         '401':
           description: Unauthorized
+
+  /roles:
+    get:
+      tags:
+        - roles
+      summary: Get all roles
+      operationId: getRoles
+      security:
+        - BearerAuth: []
+      responses:
+        default:
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: 'Get all roles success'
+                  result:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Role'
+        '401':
+          description: Unauthorized
+  /roles/{id}:
+    get:
+      tags:
+        - roles
+      summary: Get role detail
+      operationId: getRoleDetail
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      security:
+        - BearerAuth: []
+      responses:
+        default:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Role'
+        '401':
+          description: Unauthorized
+
+  /roles/assign:
+    post:
+      tags:
+        - roles
+      summary: Assign role to user
+      operationId: assignRole
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AssignRoleBody'
+      responses:
+        default:
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: 'Assigned role to user successfully'
+        '401':
+          description: Unauthorized
+
+  /roles/unassign/{user_id}/{role_id}:
+    delete:
+      tags:
+        - roles
+      summary: Unassign role from user
+      operationId: unassignRole
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: user_id
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: role_id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        default:
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: 'Unassigned role from user successfully'
+        '401':
+          description: Unauthorized
+
+  /roles/user/{user_id}:
+    get:
+      tags:
+        - roles
+      summary: Get user roles
+      operationId: getUserRoles
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: user_id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        default:
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: 'Get user roles successfully'
+                  result:
+                    type: array
+                    items:
+                      type: object # UserRole info
+        '401':
+          description: Unauthorized
+
+  /permissions/assign:
+    post:
+      tags:
+        - permissions
+      summary: Assign permission to role
+      operationId: assignPermission
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AssignPermissionBody'
+      responses:
+        default:
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: 'Assigned permission to role successfully'
+        '401':
+          description: Unauthorized
+
+  /permissions/unassign/{role_id}/{permission_id}:
+    delete:
+      tags:
+        - permissions
+      summary: Unassign permission from role
+      operationId: unassignPermission
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: role_id
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: permission_id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        default:
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: 'Unassigned permission from role successfully'
+        '401':
+          description: Unauthorized
+
+  /permissions/role/{role_id}:
+    get:
+      tags:
+        - permissions
+      summary: Get role permissions
+      operationId: getRolePermissions
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: role_id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        default:
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: 'Get role permissions successfully'
+                  result:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Permission'
+        '401':
+          description: Unauthorized
+
   /permissions/{id}:
     get:
       tags:
@@ -3664,6 +4050,55 @@ components:
           type: string
           format: ISO8601
 
+    LinkStudentParentBody:
+      type: object
+      required:
+        - student_id
+        - parent_id
+        - relationship
+      properties:
+        student_id:
+          type: string
+          format: MongoId
+        parent_id:
+          type: string
+          format: MongoId
+        relationship:
+          type: string
+          enum: ['FATHER', 'MOTHER', 'GUARDIAN', 'OTHER']
+
+    AssignRoleBody:
+      type: object
+      required:
+        - user_id
+        - role_id
+        - scope_type
+      properties:
+        user_id:
+          type: string
+          format: MongoId
+        role_id:
+          type: string
+          format: MongoId
+        scope_type:
+          type: string
+          enum: ['SYSTEM', 'CLASS', 'STUDENT']
+        scope_id:
+          type: string
+          format: MongoId
+
+    AssignPermissionBody:
+      type: object
+      required:
+        - role_id
+        - permission_id
+      properties:
+        role_id:
+          type: string
+          format: MongoId
+        permission_id:
+          type: string
+          format: MongoId
 
   securitySchemes:
     BearerAuth:

@@ -304,3 +304,21 @@ export const JOIN_REQUEST_MESSAGES = {
   ALREADY_REQUESTED: 'You have already requested to join this class',
   ALREADY_IN_CLASS: 'You are already a student in this class'
 } as const
+
+export const STUDENT_PARENT_MESSAGES = {
+  LINK_SUCCESS: 'Linked student to parent successfully',
+  UNLINK_SUCCESS: 'Unlinked student from parent successfully',
+  RELATIONSHIP_UPDATED: 'Relationship updated successfully',
+  ALREADY_LINKED: 'Student and parent are already linked',
+  NOT_LINKED: 'Student and parent are not linked',
+  GET_STUDENTS_SUCCESS: 'Get linked students success'
+} as const
+
+export const RBAC_MESSAGES = {
+  ASSIGN_ROLE_SUCCESS: 'Assigned role to user successfully',
+  UNASSIGN_ROLE_SUCCESS: 'Unassigned role from user successfully',
+  ASSIGN_PERMISSION_SUCCESS: 'Assigned permission to role successfully',
+  UNASSIGN_PERMISSION_SUCCESS: 'Unassigned permission from role successfully',
+  GET_USER_ROLES_SUCCESS: 'Get user roles successfully',
+  GET_ROLE_PERMISSIONS_SUCCESS: 'Get role permissions successfully'
+} as const

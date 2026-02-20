@@ -11,10 +11,11 @@ export const createSubjectController = async (req: Request, res: Response, next:
 }
 
 export const getSubjectsController = async (req: Request, res: Response, next: NextFunction) => {
-  const { page, limit } = req.query
+  const { page, limit, school_id } = req.query
   const result = await subjectsService.getSubjects({
     page: Number(page as string) || 1,
-    limit: Number(limit as string) || 10
+    limit: Number(limit as string) || 10,
+    school_id: school_id as string
   })
   res.json({
     message: SUBJECT_MESSAGES.GET_SUBJECTS_SUCCESS,

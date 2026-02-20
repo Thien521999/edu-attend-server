@@ -16,7 +16,10 @@ export const createAcademicYearController = async (req: Request, res: Response) 
 }
 
 export const getAcademicYearsController = async (req: Request, res: Response) => {
-  const result = await academicYearsService.getAcademicYears()
+  const { school_id } = req.query
+  const result = await academicYearsService.getAcademicYears({
+    school_id: school_id as string
+  })
   res.json({
     message: ACADEMIC_YEAR_MESSAGES.GET_ACADEMIC_YEARS_SUCCESS,
     result
