@@ -43,8 +43,13 @@ dotenv.config()
 // initFolder()
 
 databaseService.connect().then(async () => {
-  await Promise.all([databaseService.indexUsers(), databaseService.indexRefreshTokens()])
-  // await databaseService.indexRBAC()
+  await Promise.all([
+    databaseService.indexUsers(),
+    databaseService.indexRefreshTokens(),
+    databaseService.indexParents(),
+    databaseService.indexClassJoinRequests()
+  ])
+
   await seedDatabase()
 })
 
@@ -90,7 +95,6 @@ app.use('/test', (req, res) => {
 
 app.use(defaultErrorHandler)
 
-// initSocket(httpServer)
 // initSocket(httpServer)
 
 httpServer.listen(port, () => {

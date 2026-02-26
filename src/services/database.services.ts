@@ -51,30 +51,45 @@ class DatabaseService {
   }
 
   async indexUsers() {
-    await Promise.all([
-      this.users.createIndex({ email: 1, password: 1 }),
-      this.users.createIndex({ email: 1 }, { unique: true })
-    ])
+    const exists = await this.users.indexExists(['email_1_password_1', 'email_1'])
+    if (!exists) {
+      await Promise.all([
+        this.users.createIndex({ email: 1, password: 1 }),
+        this.users.createIndex({ email: 1 }, { unique: true })
+      ])
+    }
   }
 
   async indexRefreshTokens() {
-    await Promise.all([
-      this.refreshToken.createIndex({ token: 1 }),
-      this.refreshToken.createIndex({ exp: 1 }, { expireAfterSeconds: 0 })
-    ])
+    const exists = await this.refreshToken.indexExists(['token_1', 'exp_1'])
+    if (!exists) {
+      await Promise.all([
+        this.refreshToken.createIndex({ token: 1 }),
+        this.refreshToken.createIndex(
+          { exp: 1 },
+          { expireAfterSeconds: 0 } // dựa vaò mốc thời gian là exp, cũ quá thì mongoDB tự xoá
+        )
+      ])
+    }
   }
 
-  // async indexRBAC() {
-  //   await Promise.all([
-  //     this.roles.createIndex({ code: 1 }, { unique: true }),
-  //     this.permissions.createIndex({ code: 1 }, { unique: true }),
-  //     this.userRoles.createIndex({ user_id: 1 }),
-  //     this.userRoles.createIndex({ role_id: 1 }),
-  //     this.rolePermissions.createIndex({ role_id: 1, permission_id: 1 }, { unique: true }),
-  //     this.invitations.createIndex({ email: 1 }),
-  //     this.invitations.createIndex({ token: 1 })
-  //   ])
-  // }
+  async indexParents() {
+    const exists = await this.parents.indexExists(['student_id_1_parent_id_1'])
+    if (!exists) {
+      await Promise.all([this.parents.createIndex({ student_id: 1, parent_id: 1 })])
+    }
+  }
+
+  async indexClassJoinRequests() {
+    const exists = await this.classJoinRequests.indexExists(['user_id_1_class_id_1', 'link_code_1', 'owner_id_1'])
+    if (!exists) {
+      await Promise.all([
+        this.classJoinRequests.createIndex({ user_id: 1, class_id: 1 }),
+        this.classJoinRequests.createIndex({ link_code: 1 }, { unique: true }),
+        this.classJoinRequests.createIndex({ owner_id: 1 }, { unique: true })
+      ])
+    }
+  }
 
   get users(): Collection<User> {
     return this.db.collection(process.env.DB_USERS_COLLECTION as string)
