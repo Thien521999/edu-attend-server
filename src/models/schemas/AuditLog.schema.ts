@@ -4,13 +4,13 @@ import { ActionType } from '~/constants/enums'
 interface AuditLogType {
   _id?: ObjectId
   user_id: ObjectId // Người thực hiện hành động
-  school_id: ObjectId
-  action: ActionType
+  school_id: ObjectId // ID của Trường học
+  action: ActionType // Hành động được thực hiện
   target_id: ObjectId // ID của đối tượng bị tác động (class_id, student_id...)
   target_collection: string // Tên collection bị tác động (VD: 'students', 'attendance_records')
   old_value?: any // Giá trị trước khi sửa
   new_value?: any // Giá trị sau khi sửa
-  ip_address?: string
+  ip_address?: string // Địa chỉ IP của người thực hiện hành động
   user_agent?: string
   created_at?: Date
 }

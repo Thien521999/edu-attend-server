@@ -550,11 +550,11 @@ class UsersService {
 
     await databaseService.invitations.insertOne(
       new Invitation({
-        email: payload.email,
+        email: payload.email, // email của người được mời
         role_id: role._id as ObjectId,
         scope_type: RoleScopeType.SYSTEM, // Teacher role scope is usually CLASS but invitation is for the role itself
         scope_id: null,
-        inviter_id: new ObjectId(payload.inviter_id),
+        inviter_id: new ObjectId(payload.inviter_id), // id của người mời
         token,
         status: InvitationStatus.PENDING,
         expires_at
@@ -568,20 +568,24 @@ class UsersService {
   }
 
   async acceptInvitation(payload: AcceptInvitationReqBody) {
+    // verify invitation token
     const decoded_invitation_token = await verifyToken({
       token: payload.token,
       secretOrPublicKey: process.env.JWT_SECRET_INVITATION_TOKEN as string
     })
 
+    // find invitation by token
     const invitation = await databaseService.invitations.findOne({
       token: payload.token,
       status: InvitationStatus.PENDING
     })
 
+    // check invitation is valid
     if (!invitation) {
       throw new Error('Invitation not found or already used')
     }
 
+    // check invitation is expired
     if (new Date() > invitation.expires_at) {
       await databaseService.invitations.updateOne(
         { _id: invitation._id },
@@ -590,7 +594,7 @@ class UsersService {
       throw new Error('Invitation expired')
     }
 
-    // Create User
+    // create user if not exists
     const user_id = new ObjectId()
     await databaseService.users.insertOne(
       new User({
@@ -602,14 +606,14 @@ class UsersService {
       })
     )
 
-    // Assign Role
+    // assign role to user (user là teacher vừa tạo)
     await databaseService.userRoles.insertOne(
       new UserRole({
-        user_id,
-        role_id: invitation.role_id,
-        scope_type: invitation.scope_type,
-        scope_id: invitation.scope_id,
-        granted_by: invitation.inviter_id,
+        user_id, // id của teacher vừa tạo
+        role_id: invitation.role_id, // id của role teacher
+        scope_type: invitation.scope_type, // scope type của role teacher
+        scope_id: invitation.scope_id, // scope id của role teacher
+        granted_by: invitation.inviter_id, // id của người mời
         created_at: new Date()
       })
     )
