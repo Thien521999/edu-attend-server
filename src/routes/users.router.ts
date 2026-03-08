@@ -28,6 +28,7 @@ import {
   verifiedUserValidator,
   verifyForgotPasswordTokenValidator
 } from '~/middlewares/users.middlewares'
+import { rateLimitMiddleware } from '~/middlewares/rate-limiting.middlewares'
 import { UpdatedMeReqBody } from '~/models/requests/User.requests'
 import { wrapRequestHandler } from '~/utils/handler'
 
@@ -39,7 +40,12 @@ const usersRouter = Router()
  * Method: POST
  * Body: {name:string, account:string, password:string}
  */
-usersRouter.post('/register', registerValidator, wrapRequestHandler(registerController))
+usersRouter.post(
+  '/register',
+  rateLimitMiddleware({ limit: 5, windowInSeconds: 60, keyPrefix: 'rate-limit:register' }),
+  registerValidator,
+  wrapRequestHandler(registerController)
+)
 
 /*
  * Desciption. Login a user
@@ -47,7 +53,12 @@ usersRouter.post('/register', registerValidator, wrapRequestHandler(registerCont
  * Method: POST
  * Body: { email:string, password:string, fcm_token: string }
  */
-usersRouter.post('/login', loginValidator, wrapRequestHandler(loginController))
+usersRouter.post(
+  '/login',
+  rateLimitMiddleware({ limit: 5, windowInSeconds: 60, keyPrefix: 'rate-limit:login' }),
+  loginValidator,
+  wrapRequestHandler(loginController)
+)
 
 /*
  * Desciption. Verify email when user client click on the link email
@@ -64,7 +75,12 @@ usersRouter.post('/verify-email', emailVerifyTokenValidator, wrapRequestHandler(
  * Header: { email: string }
  * Body: {}
  */
-usersRouter.post('/forgot-password', forgotPasswordValidator, wrapRequestHandler(forgotPasswordController))
+usersRouter.post(
+  '/forgot-password',
+  rateLimitMiddleware({ limit: 3, windowInSeconds: 60 * 60, keyPrefix: 'rate-limit:forgot-password' }),
+  forgotPasswordValidator,
+  wrapRequestHandler(forgotPasswordController)
+)
 
 /*
  * Desciption. Verify link in email to reset password
