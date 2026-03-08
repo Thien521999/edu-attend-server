@@ -2,6 +2,7 @@ import { ObjectId } from 'mongodb'
 import databaseService from './database.services'
 import UserRole from '~/models/schemas/UserRole.schema'
 import { AssignRoleReqBody } from '~/models/requests/RBAC.requests'
+import redisService from './redis.services'
 
 class RolesService {
   async getRoles() {
@@ -25,6 +26,8 @@ class RolesService {
         created_at: new Date()
       })
     )
+    // Invalidate cache
+    await redisService.del(`user:perms:${payload.user_id}`)
     return result
   }
 
@@ -33,6 +36,8 @@ class RolesService {
       user_id: new ObjectId(user_id),
       role_id: new ObjectId(role_id)
     })
+    // Invalidate cache
+    await redisService.del(`user:perms:${user_id}`)
     return result
   }
 

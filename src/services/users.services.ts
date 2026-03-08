@@ -14,6 +14,7 @@ import { InvitationStatus } from '~/constants/enums'
 import Invitation from '~/models/schemas/Invitation.schema'
 import { AcceptInvitationReqBody } from '~/models/requests/Invitation.requests'
 import UserRole from '~/models/schemas/UserRole.schema'
+import redisService from './redis.services'
 
 class UsersService {
   private signAccessToken({
@@ -163,6 +164,15 @@ class UsersService {
   }
 
   private async getRoleAndPermissions(user_id: string) {
+    const cacheKey = `user:perms:${user_id}`
+    const cachedData = await redisService.get(cacheKey)
+
+    if (cachedData) {
+      console.log('Cache Hit: Found permissions in Redis', cachedData)
+      return JSON.parse(cachedData)
+    }
+
+    console.log('Cache Miss: Fetching permissions from MongoDB')
     const result = await databaseService.userRoles
       .aggregate([
         { $match: { user_id: new ObjectId(user_id) } },
@@ -203,7 +213,12 @@ class UsersService {
       owner_id = user_id
     }
 
-    return { role_code, permissions, owner_id }
+    const permsData = { role_code, permissions, owner_id }
+
+    // Cache for 24 hours
+    await redisService.set(cacheKey, JSON.stringify(permsData), 24 * 60 * 60)
+
+    return permsData
   }
 
   async register(payload: RegisterReqBody) {

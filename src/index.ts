@@ -22,6 +22,7 @@ import timetablesRouter from './routes/timetables.router'
 import usersRouter from './routes/users.router'
 import classJoinRequestsRouter from './routes/classJoinRequests.router'
 import databaseService from './services/database.services'
+import redisService from './services/redis.services'
 import { seedDatabase } from './utils/database.seeder'
 // import initSocket from './utils/socket'
 // import { Server } from 'socket.io'
@@ -47,7 +48,8 @@ databaseService.connect().then(async () => {
     databaseService.indexUsers(),
     databaseService.indexRefreshTokens(),
     databaseService.indexParents(),
-    databaseService.indexClassJoinRequests()
+    databaseService.indexClassJoinRequests(),
+    redisService.connect()
   ])
 
   await seedDatabase()
