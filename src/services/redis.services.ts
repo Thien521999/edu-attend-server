@@ -44,6 +44,14 @@ class RedisService {
   async quit() {
     await this.client.quit()
   }
+
+  async incr(key: string) {
+    return await this.client.incr(key)
+  }
+
+  async expire(key: string, seconds: number) {
+    return await this.client.expire(key, seconds) // set time to live, seconds: đơn vị là giây
+  }
 }
 
 const redisService = new RedisService()
