@@ -30,11 +30,13 @@ export const registerController = async (req: Request<ParamsDictionary, any, Reg
 }
 
 export const loginController = async (req: Request<ParamsDictionary, any, LoginReqBody>, res: Response) => {
+  const { fcm_token } = req.body
   const user = req.user as User
   const user_id = (user._id as ObjectId).toString()
   const result = await usersService.login({
     user_id,
-    status: user.status
+    status: user.status,
+    fcm_token
   })
 
   res.json({

@@ -10,6 +10,7 @@ interface UserType {
   status?: userVerifyStatus
   avatar?: string // optional
   cover_photo?: string // optional
+  fcm_token?: string // optional
 
   created_at?: Date
   updated_at?: Date
@@ -24,6 +25,7 @@ export default class User {
   forgot_password_token: string
   avatar: string
   cover_photo: string
+  fcm_token: string
 
   created_at: Date
   updated_at: Date
@@ -40,6 +42,7 @@ export default class User {
 
     this.avatar = user.avatar || ''
     this.cover_photo = user.cover_photo || ''
+    this.fcm_token = user.fcm_token || ''
 
     this.created_at = user.created_at || date
     this.updated_at = user.updated_at || date
