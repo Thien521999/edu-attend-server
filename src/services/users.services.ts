@@ -291,8 +291,13 @@ class UsersService {
     }
   }
 
-  async login({ user_id, status }: { user_id: string; status: userVerifyStatus }) {
+  async login({ user_id, status, fcm_token }: { user_id: string; status: userVerifyStatus; fcm_token?: string }) {
     const { role_code, permissions, owner_id } = await this.getRoleAndPermissions(user_id)
+
+    // Update FCM token if provided
+    if (fcm_token) {
+      await databaseService.users.updateOne({ _id: new ObjectId(user_id) }, { $set: { fcm_token } })
+    }
 
     const [access_token, refresh_token] = await this.signAccessAndRefreshToken({
       user_id,

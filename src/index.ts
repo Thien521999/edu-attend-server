@@ -25,6 +25,7 @@ import databaseService from './services/database.services'
 import redisService from './services/redis.services'
 import { seedDatabase } from './utils/database.seeder'
 import { initEmailWorker } from './workers/email.worker'
+import { initCronJobs } from './services/cron.services'
 // import initSocket from './utils/socket'
 // import { Server } from 'socket.io'
 // import { initSocket } from './utils/initSocket'
@@ -103,4 +104,5 @@ app.use(defaultErrorHandler)
 httpServer.listen(port, () => {
   console.log(`Example app listening on port ${port}`)
   initEmailWorker()
+  initCronJobs()
 })
