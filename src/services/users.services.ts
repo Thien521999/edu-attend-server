@@ -10,6 +10,7 @@ import RefreshToken from '~/models/schemas/RefreshToken.schema'
 import { RoleCode, RoleScopeType, PermissionCode } from '~/constants/enums'
 import { SignOptions } from 'jsonwebtoken'
 import { sendForgotPasswordEmail, sendVerifyRegisterEmail } from '~/utils/email'
+import { addEmailJob } from './queue.services'
 import { InvitationStatus } from '~/constants/enums'
 import Invitation from '~/models/schemas/Invitation.schema'
 import { AcceptInvitationReqBody } from '~/models/requests/Invitation.requests'
@@ -277,7 +278,11 @@ class UsersService {
     // 5. Client receive access_token and refresh_token
 
     // buoc nay test sau
-    // await sendVerifyRegisterEmail(payload.email, email_verify_token)
+    await addEmailJob({
+      type: 'verify-register',
+      email: payload.email,
+      token: email_verify_token
+    })
 
     return {
       access_token,
@@ -407,7 +412,11 @@ class UsersService {
     )
 
     // gửi email
-    await sendForgotPasswordEmail(email, forgot_password_token)
+    await addEmailJob({
+      type: 'forgot-password',
+      email,
+      token: forgot_password_token
+    })
 
     return {
       message: USERS_MESSAGES.CHECK_EMAIL_TO_RESET_PASSWORD
