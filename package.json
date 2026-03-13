@@ -37,6 +37,7 @@
   },
   "dependencies": {
     "@aws-sdk/client-ses": "^3.978.0",
+    "@types/cors": "^2.8.19",
     "bullmq": "^5.70.4",
     "cors": "^2.8.6",
     "dotenv": "^17.2.3",
