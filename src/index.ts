@@ -1,12 +1,17 @@
 import cors from 'cors'
 import dotenv from 'dotenv'
 import express from 'express'
+import fs from 'fs'
 import { createServer } from 'http'
+import path from 'path'
+import swaggerUi from 'swagger-ui-express'
+import YAML from 'yaml'
 import { defaultErrorHandler } from './middlewares/error.middlewares'
 import academicYearsRouter from './routes/academicYears.router'
 import attendancesRouter from './routes/attendances.router'
 import auditLogsRouter from './routes/auditLogs.router'
 import classesRouter from './routes/classes.router'
+import classJoinRequestsRouter from './routes/classJoinRequests.router'
 import financialRouter from './routes/financial.router'
 import gradesRouter from './routes/grades.router'
 import invitationsRouter from './routes/invitations.router'
@@ -20,17 +25,19 @@ import teachersRouter from './routes/teachers.router'
 import teachingAssignmentsRouter from './routes/teachingAssignments.router'
 import timetablesRouter from './routes/timetables.router'
 import usersRouter from './routes/users.router'
-import classJoinRequestsRouter from './routes/classJoinRequests.router'
+import { initCronJobs } from './services/cron.services'
 import databaseService from './services/database.services'
 import redisService from './services/redis.services'
 import { seedDatabase } from './utils/database.seeder'
 import { initEmailWorker } from './workers/email.worker'
-import { initCronJobs } from './services/cron.services'
 // import initSocket from './utils/socket'
 // import { Server } from 'socket.io'
 // import { initSocket } from './utils/initSocket'
 // import admin from 'firebase-admin'
 // import serviceAccount from '../firbaseConfig.json'
+
+const file = fs.readFileSync(path.resolve('./api-swagger.yaml'), 'utf8')
+const swaggerDocument = YAML.parse(file)
 
 dotenv.config()
 
@@ -88,6 +95,8 @@ app.use('/audit-logs', auditLogsRouter)
 app.use('/roles', rolesRouter)
 app.use('/permissions', permissionsRouter)
 app.use('/class-join-requests', classJoinRequestsRouter)
+
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument))
 
 // cron.schedule("* * * * *", async()=> {
 //   await
