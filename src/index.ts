@@ -97,6 +97,9 @@ app.use('/permissions', permissionsRouter)
 app.use('/class-join-requests', classJoinRequestsRouter)
 
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument))
+app.get('/openapi.json', (req, res) => {
+  res.json(swaggerDocument)
+})
 
 // cron.schedule("* * * * *", async()=> {
 //   await
