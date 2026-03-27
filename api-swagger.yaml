@@ -3,14 +3,11 @@ info:
   description: Edu attend API
   version: '1.0.0'
   title: Edu attend API
-  termsOfService: 'http://swagger.io/terms/'
-  contact:
-    email: trhoangthien1999@gmail.com
-  license:
-    name: Apache 2.0
-    url: 'http://www.apache.org/licenses/LICENSE-2.0.html'
+externalDocs:
+  description: OpenAPI JSON specification
+  url: https://api-edu-attend.tranhoangthien.id.vn/openapi.json
 servers:
-  - url: 'http://localhost:4000'
+  - url: 'https://api-edu-attend.tranhoangthien.id.vn'
 tags:
   - name: users
     description: Authentication
