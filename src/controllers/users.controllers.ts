@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { NextFunction, Request, Response } from 'express'
 import { ParamsDictionary } from 'express-serve-static-core'
 import { ObjectId } from 'mongodb'
@@ -6,10 +7,10 @@ import HTTP_STATUS from '~/constants/httpStatus'
 import { USERS_MESSAGES } from '~/constants/messages'
 import {
   ChangePasswordReqBody,
-  FollowReqBody,
+  // FollowReqBody,
   ForgotPasswordReqBody,
   LoginReqBody,
-  LogoutReqbody,
+  // LogoutReqbody,
   RefreshTokenReqbody,
   RegisterReqBody,
   ResetPasswordReqBody,
