@@ -6,7 +6,7 @@ interface AcademicYearType {
   school_id: ObjectId
   start_date: Date
   end_date: Date
-  is_active: Boolean
+  is_active: boolean
 }
 
 // AcademicYear: Năm học
@@ -16,7 +16,7 @@ export default class AcademicYear {
   school_id: ObjectId
   start_date: Date
   end_date: Date
-  is_active: Boolean
+  is_active: boolean
 
   constructor(academicYear: AcademicYearType) {
     const date = new Date()

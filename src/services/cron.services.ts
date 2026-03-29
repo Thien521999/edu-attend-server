@@ -1,5 +1,4 @@
 import cron from 'node-cron'
-import { ObjectId } from 'mongodb'
 import databaseService from './database.services'
 import notificationService from './notifications.services'
 
